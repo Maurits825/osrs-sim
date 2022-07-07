@@ -1009,6 +1009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runEnergy: {fileID: 292923446}
+  pathTileMarker: {fileID: 960376515}
 --- !u!1 &1978377312
 GameObject:
   m_ObjectHideFlags: 0
