@@ -160,8 +160,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -80, y: -80}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -70, y: -70}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &292923446
 MonoBehaviour:
@@ -205,6 +205,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  playerVariables: {fileID: 11400000, guid: bd4aaecc819e43c4c9f9690736a833a7, type: 2}
 --- !u!4 &380644894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf112a6b32e588f49a5042b55084b40c, type: 3}
@@ -981,6 +982,8 @@ MonoBehaviour:
     m_Bits: 64
   tileMarker: {fileID: 960376515}
   player: {fileID: 380644894}
+  modelRotationSpeed: 200
+  modelMoveSpeed: 2
 --- !u!4 &1894020714
 Transform:
   m_ObjectHideFlags: 0
@@ -1008,7 +1011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02cc29fdf1bc894b88de62f5c3b24d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runEnergy: {fileID: 292923446}
+  playerVariables: {fileID: 11400000, guid: bd4aaecc819e43c4c9f9690736a833a7, type: 2}
   pathTileMarker: {fileID: 960376515}
 --- !u!1 &1978377312
 GameObject:

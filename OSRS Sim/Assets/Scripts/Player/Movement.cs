@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public RunEnergy runEnergy;
-
-    public const int RUN_ENERGY_MAX = 100;
-    private float runEnergyAmount;
+    [SerializeField] private PlayerVariables playerVariables;
     private float runEnergyRegen;
 
     private List<GameObject> pooledTileMarker;
@@ -16,9 +13,11 @@ public class Movement : MonoBehaviour
 
     private PathFinder pathFinder;
 
+    public Vector3Int CurrentPlayerTile { get; private set; }
+
     private void Start()
     {
-        runEnergyAmount = 0;
+        playerVariables.runEnergy = 0;
         runEnergyRegen = 10f;
 
         CreateTileMarkerPool();
@@ -28,40 +27,52 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        runEnergyAmount += runEnergyRegen * Time.deltaTime;
-        runEnergyAmount = Mathf.Clamp(runEnergyAmount, 0f, RUN_ENERGY_MAX);
-
-        runEnergy.SetRunEnergy(GetRunEnergyNormalized());
+        playerVariables.runEnergy += runEnergyRegen * Time.deltaTime;
+        playerVariables.runEnergy = Mathf.Clamp(playerVariables.runEnergy, 0f, playerVariables.maxRunEnergy);
     }
 
     public void TrySpendEnergy(int amount)
     {
-        if (runEnergyAmount >= amount)
+        if (playerVariables.runEnergy >= amount)
         {
-            runEnergyAmount -= amount;
+            playerVariables.runEnergy -= amount;
         }
     }
 
-    public Vector3Int ProcessMovement(Vector3Int player, Vector3Int target)
+    public Vector3Int ProcessMovement(Vector3Int target)
     {
         ClearCurrentPathTiles();
-        List<Vector3Int> path = pathFinder.FindPath(player, target);
+
+        if (target == CurrentPlayerTile)
+        {
+            return CurrentPlayerTile;
+        }
+        
+        List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
+
+        //drain run energy here? runEnergyAmount += runEnergyRegen * Time.deltaTime; based on running or not
+
+        int tileIndex = 1;
+        if (playerVariables.isRunning)
+        {
+            if (path.Count > 2)
+            {
+                tileIndex = 2;
+            }
+        }
+
+        Vector3Int nextTile = path[tileIndex];
+        CurrentPlayerTile = nextTile;
+
         DrawPath(path);
 
-        //TODO isRun boolean --> index is then 0 or 2?
-        //drain run energy here? runEnergyAmount += runEnergyRegen * Time.deltaTime; based on running or not
-        //update ui
-        return path[1];
-    }
-
-    private float GetRunEnergyNormalized()
-    {
-        return runEnergyAmount / RUN_ENERGY_MAX;
+        return nextTile;
     }
 
     private void DrawPath(List<Vector3Int> path)
     {
-        foreach (Vector3Int tile in path.GetRange(1, path.Count - 1))
+        int startIndex = 1;
+        foreach (Vector3Int tile in path.GetRange(startIndex, path.Count - startIndex))
         {
             GameObject tileObj = GetPooledTileMarker();
             tileObj.transform.position = tile;

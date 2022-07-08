@@ -7,9 +7,23 @@ public class RunEnergy : MonoBehaviour
 {
     public Image barImage;
     public Gradient gradient;
-    public void SetRunEnergy(float amount)
+
+    [SerializeField] private PlayerVariables playerVariables;
+
+    private void Update()
     {
+        float amount = playerVariables.runEnergy / playerVariables.maxRunEnergy;
+
         barImage.fillAmount = amount;
-        barImage.color = gradient.Evaluate(amount);
+
+        if (playerVariables.isRunning)
+        {
+            barImage.color = gradient.Evaluate(amount);
+        }
+        else
+        {
+            barImage.color = Color.grey;
+        }
+        
     }
 }
