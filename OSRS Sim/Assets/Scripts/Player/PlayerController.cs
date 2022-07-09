@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public PlayerVariables playerVariables;
+
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private GameObject tileMarker;
     [SerializeField] private Transform player;
 
-    [SerializeField] private float modelRotationSpeed;
-    [SerializeField] private float modelMoveSpeed;
+    private const float modelRotationSpeed = 250;
+    private float modelMoveSpeed;
+    private const float modelMoveSpeedRun = 2.5f; //TODO make this faster?
+    private const float modelMoveSpeedWalk = 1;
 
     private TickManager tickManager;
     private Movement movement;
     private Vector3Int tileClicked;
 
-    Vector3Int nextTile;
-    Vector3 direction;
+    //private Vector3Int nextTile;
+    private Queue<Vector3Int> nextTiles= new();
+    //private Vector3 direction;
+    private float modelDistanceThreshold = 0.01f;
 
     private void Start()
     {
@@ -49,7 +55,11 @@ public class PlayerController : MonoBehaviour
     public void OnGameTick()
     {
         //find path every tick for now, could make this better
-        nextTile = movement.ProcessMovement(tileClicked);
+        Vector3Int? nextTile = movement.ProcessMovement(tileClicked);
+        if (nextTile.HasValue)
+        {
+            nextTiles.Enqueue((Vector3Int)nextTile);
+        }
     }
 
     private Vector3Int GetTileLocation(Vector3 worldLocation)
@@ -62,14 +72,27 @@ public class PlayerController : MonoBehaviour
 
     private void SetPositionAndRotation()
     {
-        if (nextTile != player.position)
-        {
-            direction = nextTile - player.position;
-        }
+        modelMoveSpeed = playerVariables.isRunning ? modelMoveSpeedRun : modelMoveSpeedWalk;
 
-        float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
-        Vector3 position = Vector3.MoveTowards(player.position, nextTile, modelMoveSpeed * Time.deltaTime);
-        player.SetPositionAndRotation(position, Quaternion.RotateTowards(player.rotation, q, Time.deltaTime * modelRotationSpeed));
+        if (nextTiles.Count > 0)
+        {
+            Vector3Int currentTile = nextTiles.Peek();
+            Vector3 direction = currentTile - player.position;
+            if (Vector3.Distance(player.position, currentTile) <= modelDistanceThreshold)
+            {
+                nextTiles.Dequeue();
+
+                if (nextTiles.Count > 0)
+                {
+                    currentTile = nextTiles.Peek();
+                    direction = currentTile - player.position;
+                }
+            }
+
+            float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
+            Vector3 position = Vector3.MoveTowards(player.position, currentTile, modelMoveSpeed * Time.deltaTime);
+            player.SetPositionAndRotation(position, Quaternion.RotateTowards(player.rotation, q, Time.deltaTime * modelRotationSpeed));
+        }
     }
 }

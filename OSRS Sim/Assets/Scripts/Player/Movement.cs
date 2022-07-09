@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public Vector3Int CurrentPlayerTile { get; private set; }
     [SerializeField] private PlayerVariables playerVariables;
     private float runEnergyRegen;
 
@@ -13,8 +14,7 @@ public class Movement : MonoBehaviour
 
     private PathFinder pathFinder;
 
-    public Vector3Int CurrentPlayerTile { get; private set; }
-
+    private GameObject playerTileMarker;
     private void Start()
     {
         playerVariables.runEnergy = 0;
@@ -23,6 +23,10 @@ public class Movement : MonoBehaviour
         CreateTileMarkerPool();
 
         pathFinder = new PathFinder();
+
+        //TODO when game start set currentplayertile?
+        playerTileMarker = GetPooledTileMarker();
+        playerTileMarker.SetActive(true);
     }
 
     private void Update()
@@ -39,13 +43,13 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public Vector3Int ProcessMovement(Vector3Int target)
+    public Vector3Int? ProcessMovement(Vector3Int target)
     {
         ClearCurrentPathTiles();
 
         if (target == CurrentPlayerTile)
         {
-            return CurrentPlayerTile;
+            return null;
         }
         
         List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
@@ -63,8 +67,9 @@ public class Movement : MonoBehaviour
 
         Vector3Int nextTile = path[tileIndex];
         CurrentPlayerTile = nextTile;
+        playerTileMarker.transform.position = CurrentPlayerTile;
 
-        DrawPath(path);
+        //DrawPath(path);
 
         return nextTile;
     }
