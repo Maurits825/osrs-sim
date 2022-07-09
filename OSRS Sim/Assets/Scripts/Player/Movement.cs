@@ -17,7 +17,8 @@ public class Movement : MonoBehaviour
     private GameObject playerTileMarker;
     private void Start()
     {
-        playerVariables.RunEnergy = 0;
+        playerVariables.RunEnergy = 100;
+        playerVariables.isRunning = true;
         runEnergyRegen = 10f;
 
         CreateTileMarkerPool();

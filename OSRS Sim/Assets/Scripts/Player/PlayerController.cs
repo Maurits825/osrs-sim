@@ -13,16 +13,14 @@ public class PlayerController : MonoBehaviour
 
     private const float modelRotationSpeed = 250;
     private float modelMoveSpeed;
-    private const float modelMoveSpeedRun = 3.5f; //TODO make this faster?
+    private const float modelMoveSpeedRun = 3.0f; //TODO make this faster?
     private const float modelMoveSpeedWalk = 1;
 
     private TickManager tickManager;
     private Movement movement;
     private Vector3Int tileClicked;
 
-    //private Vector3Int nextTile;
     private Queue<Vector3Int> nextTiles= new();
-    //private Vector3 direction;
     private float modelDistanceThreshold = 0.01f;
 
     private void Start()
