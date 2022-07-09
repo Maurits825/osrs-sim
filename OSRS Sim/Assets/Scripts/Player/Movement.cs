@@ -26,7 +26,6 @@ public class Movement : MonoBehaviour
 
         //TODO when game start set currentplayertile?
         playerTileMarker = GetPooledTileMarker();
-        playerTileMarker.SetActive(true);
     }
 
     private void Update()
@@ -67,9 +66,21 @@ public class Movement : MonoBehaviour
 
         Vector3Int nextTile = path[tileIndex];
         CurrentPlayerTile = nextTile;
-        playerTileMarker.transform.position = CurrentPlayerTile;
 
-        //DrawPath(path);
+        if (Settings.s.drawPlayerTile)
+        {
+            playerTileMarker.SetActive(true);
+            playerTileMarker.transform.position = CurrentPlayerTile;
+        }
+        else
+        {
+            playerTileMarker.SetActive(false);
+        }
+
+        if (Settings.s.drawPlayerPath)
+        {
+            DrawPath(path);
+        }
 
         return nextTile;
     }

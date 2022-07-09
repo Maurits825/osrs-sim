@@ -89,6 +89,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            //TODO rotation doesnt always finish when moving one tile
             float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
             Vector3 position = Vector3.MoveTowards(player.position, currentTile, modelMoveSpeed * Time.deltaTime);
