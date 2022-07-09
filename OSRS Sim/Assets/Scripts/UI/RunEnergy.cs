@@ -12,7 +12,7 @@ public class RunEnergy : MonoBehaviour
 
     private void Update()
     {
-        float amount = playerVariables.runEnergy / playerVariables.maxRunEnergy;
+        float amount = playerVariables.RunEnergy / playerVariables.maxRunEnergy;
 
         barImage.fillAmount = amount;
 

@@ -72,8 +72,6 @@ public class PlayerController : MonoBehaviour
 
     private void SetPositionAndRotation()
     {
-        modelMoveSpeed = playerVariables.isRunning ? modelMoveSpeedRun : modelMoveSpeedWalk;
-
         if (nextTiles.Count > 0)
         {
             Vector3Int currentTile = nextTiles.Peek();
@@ -88,6 +86,9 @@ public class PlayerController : MonoBehaviour
                     direction = currentTile - player.position;
                 }
             }
+
+            //TODO if moving only one tile while running should be walking...
+            modelMoveSpeed = playerVariables.isRunning ? modelMoveSpeedRun : modelMoveSpeedWalk;
 
             //TODO rotation doesnt always finish when moving one tile
             float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;

@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour
     private GameObject playerTileMarker;
     private void Start()
     {
-        playerVariables.runEnergy = 0;
+        playerVariables.RunEnergy = 0;
         runEnergyRegen = 10f;
 
         CreateTileMarkerPool();
@@ -28,23 +28,11 @@ public class Movement : MonoBehaviour
         playerTileMarker = GetPooledTileMarker();
     }
 
-    private void Update()
-    {
-        playerVariables.runEnergy += runEnergyRegen * Time.deltaTime;
-        playerVariables.runEnergy = Mathf.Clamp(playerVariables.runEnergy, 0f, playerVariables.maxRunEnergy);
-    }
-
-    public void TrySpendEnergy(int amount)
-    {
-        if (playerVariables.runEnergy >= amount)
-        {
-            playerVariables.runEnergy -= amount;
-        }
-    }
-
     public Vector3Int? ProcessMovement(Vector3Int target)
     {
         ClearCurrentPathTiles();
+
+        playerVariables.RunEnergy += runEnergyRegen;
 
         if (target == CurrentPlayerTile)
         {
@@ -53,15 +41,22 @@ public class Movement : MonoBehaviour
         
         List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
 
-        //drain run energy here? runEnergyAmount += runEnergyRegen * Time.deltaTime; based on running or not
-
         int tileIndex = 1;
+        //TODO figure run energy drain maths
+        float runEnergyDrain = 0;
         if (playerVariables.isRunning)
         {
             if (path.Count > 2)
             {
                 tileIndex = 2;
+                runEnergyDrain = 15;
             }
+        }
+
+        playerVariables.RunEnergy -= runEnergyDrain;
+        if (playerVariables.RunEnergy == 0f)
+        {
+            playerVariables.isRunning = false;
         }
 
         Vector3Int nextTile = path[tileIndex];
