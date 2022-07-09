@@ -33,13 +33,13 @@ public class Movement : MonoBehaviour
         ClearCurrentPathTiles();
 
         playerVariables.RunEnergy += runEnergyRegen;
+        
+        List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
 
-        if (target == CurrentPlayerTile)
+        if (path.Count == 0 || path[^1] == CurrentPlayerTile)
         {
             return null;
         }
-        
-        List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
 
         int tileIndex = 1;
         //TODO figure run energy drain maths

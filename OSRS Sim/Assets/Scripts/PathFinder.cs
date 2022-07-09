@@ -30,6 +30,20 @@ public class PathFinder
         PathNode startNode = grid[startX, startY];
         PathNode endNode = grid[targetX, targetY];
 
+        if (!endNode.isWalkable)
+        {
+            PathNode closestEndNode = FindClosestWalkableNode(endNode);
+            if (closestEndNode != null)
+            {
+                endNode = closestEndNode;
+            }
+            else
+            {
+                //TODO
+                return null;
+            }
+        }
+
         openList = new List<PathNode> { startNode };
         closedList = new List<PathNode>();
 
@@ -163,5 +177,35 @@ public class PathFinder
             worldPath.Add(new Vector3Int(x, 0, z));
         }
         return worldPath;
+    }
+
+    private PathNode FindClosestWalkableNode(PathNode node)
+    {
+        for (int radius = 1; radius < GRID_RADIUS; radius++)
+        {
+            for (int x = -radius; x <= radius; x++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    if (Mathf.Abs(x) != radius)
+                    {
+                        if (Mathf.Abs(y) != radius)
+                        {
+                            continue;
+                        }
+                    }
+                    int neighbourX = node.x + x;
+                    int neighbourY = node.y + y;
+                    PathNode closestNode = grid[neighbourX, neighbourY];
+
+                    if (closestNode.isWalkable)
+                    {
+                        return closestNode;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

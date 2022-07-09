@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private const float modelRotationSpeed = 250;
     private float modelMoveSpeed;
-    private const float modelMoveSpeedRun = 2.5f; //TODO make this faster?
+    private const float modelMoveSpeedRun = 3.5f; //TODO make this faster?
     private const float modelMoveSpeedWalk = 1;
 
     private TickManager tickManager;
