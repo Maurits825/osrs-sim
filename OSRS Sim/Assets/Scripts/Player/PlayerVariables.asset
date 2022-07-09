@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e54881950cbbb48bb697471994d950, type: 3}
   m_Name: PlayerVariables
   m_EditorClassIdentifier: 
-  runEnergy: 100
   maxRunEnergy: 100
   isRunning: 1

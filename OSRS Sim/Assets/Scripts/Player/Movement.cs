@@ -6,7 +6,7 @@ public class Movement : MonoBehaviour
 {
     public Vector3Int CurrentPlayerTile { get; private set; }
     [SerializeField] private PlayerVariables playerVariables;
-    private float runEnergyRegen;
+    [SerializeField] private float runEnergyRegen;
 
     private List<GameObject> pooledTileMarker;
     private List<GameObject> currentPathTiles = new List<GameObject>();

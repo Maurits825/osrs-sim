@@ -1056,6 +1056,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerVariables: {fileID: 11400000, guid: bd4aaecc819e43c4c9f9690736a833a7, type: 2}
+  runEnergyRegen: 10
   pathTileMarker: {fileID: 960376515}
 --- !u!1 &1978377312
 GameObject:
