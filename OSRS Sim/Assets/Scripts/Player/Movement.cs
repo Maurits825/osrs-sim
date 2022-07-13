@@ -6,41 +6,38 @@ public class Movement : MonoBehaviour
 {
     public Vector3Int CurrentPlayerTile { get; private set; }
     [SerializeField] private PlayerVariables playerVariables;
-    [SerializeField] private float runEnergyRegen;
 
     private List<GameObject> pooledTileMarker;
     private List<GameObject> currentPathTiles = new List<GameObject>();
     [SerializeField] private GameObject pathTileMarker;
 
     private PathFinder pathFinder;
-
+    private RunEnergy runEnergy;
     private GameObject playerTileMarker;
     private void Start()
     {
         playerVariables.RunEnergy = 100;
         playerVariables.isRunning = true;
-        runEnergyRegen = 10f;
 
         CreateTileMarkerPool();
 
         pathFinder = new PathFinder();
+        runEnergy = GetComponent<RunEnergy>();
 
         //TODO when game start set currentplayertile?
         playerTileMarker = GetPooledTileMarker();
     }
 
-    public Vector3Int? ProcessMovement(Vector3Int target)
+    public void OnGameTick()
+    {
+        runEnergy.RegenRun();
+    }
+
+    public Vector3Int ProcessMovement(Vector3Int target)
     {
         ClearCurrentPathTiles();
-
-        playerVariables.RunEnergy += runEnergyRegen;
         
         List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
-
-        if (path.Count == 0 || path[^1] == CurrentPlayerTile)
-        {
-            return null;
-        }
 
         int tileIndex = 1;
         //TODO figure run energy drain maths

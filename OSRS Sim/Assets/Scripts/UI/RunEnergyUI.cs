@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RunEnergy : MonoBehaviour
+public class RunEnergyUI : MonoBehaviour
 {
     public Image barImage;
     public Gradient gradient;

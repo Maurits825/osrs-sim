@@ -6,9 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     public PlayerVariables playerVariables;
 
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField] private GameObject tileMarker;
     [SerializeField] private Transform player;
 
     private const float modelRotationSpeed = 250;
@@ -16,56 +13,21 @@ public class PlayerController : MonoBehaviour
     private const float modelMoveSpeedRun = 3.0f; //TODO make this faster?
     private const float modelMoveSpeedWalk = 1.5f;
 
-    private TickManager tickManager;
-    private Movement movement;
-    private Vector3Int tileClicked;
-
     private Queue<Vector3Int> nextTiles= new();
     private float modelDistanceThreshold = 0.01f;
 
     private void Start()
     {
-        tickManager = TickManager.Instance;
-        movement = GetComponent<Movement>();
     }
 
     private void Update()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, layerMask))
-        {
-            Vector3Int tileLocation = GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = tileLocation;
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                tickManager.RegisterMovementClick(tileLocation);
-            }
-        }
-
         SetPositionAndRotation();
     }
 
-    public void SetTileClicked(Vector3Int tileLocation)
+    public void OnGameTick(Vector3Int nextTile)
     {
-        tileClicked = tileLocation;
-    }
-    public void OnGameTick()
-    {
-        //find path every tick for now, could make this better -- add states, with scriptable objects?
-        Vector3Int? nextTile = movement.ProcessMovement(tileClicked);
-        if (nextTile.HasValue)
-        {
-            nextTiles.Enqueue((Vector3Int)nextTile);
-        }
-    }
-
-    private Vector3Int GetTileLocation(Vector3 worldLocation)
-    {
-        return new Vector3Int(
-            Mathf.RoundToInt(worldLocation.x),
-            Mathf.RoundToInt(0),
-            Mathf.RoundToInt(worldLocation.z));
+        nextTiles.Enqueue(nextTile);
     }
 
     private void SetPositionAndRotation()

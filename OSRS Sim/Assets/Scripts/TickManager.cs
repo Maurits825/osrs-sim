@@ -8,28 +8,23 @@ public class TickManager : MonoBehaviour
 
     [SerializeField] private float tickLength = 0.6f;
 
-    [SerializeField] private GameObject playerObject;
-    private PlayerController playerController;
+    [SerializeField] private GameObject gameControllerObject;
+    private GameController gameController;
 
     private float timeSinceTick = 0.0f;
 
-    private Vector3Int tileClicked;
-
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        DontDestroyOnLoad(gameObject);
+        if (TickManager.Instance == null)
         {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
+            TickManager.Instance = this;
         }
     }
 
     private void Start()
     {
-        playerController = playerObject.GetComponent<PlayerController>();
+        gameController = gameControllerObject.GetComponent<GameController>();
     }
 
     private void Update()
@@ -38,19 +33,7 @@ public class TickManager : MonoBehaviour
         if (timeSinceTick >= tickLength)
         {
             timeSinceTick = 0;
-            OnGameTick();
+            gameController.OnGameTick();
         }
-    }
-
-    private void OnGameTick()
-    {
-        playerController.SetTileClicked(tileClicked);
-
-        playerController.OnGameTick();
-    }
-
-    public void RegisterMovementClick(Vector3Int tile)
-    {
-        tileClicked = tile;
     }
 }
