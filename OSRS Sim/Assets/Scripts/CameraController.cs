@@ -8,6 +8,8 @@ public class CameraController : MonoBehaviour
     private Vector3 playerOffset = Vector3.up * 1f;
 
     private float rotateSpeed = 0.2f;
+    private float maxVerticalAngle = 88f;
+    private float minVerticalAngle = 2f;
     private Vector2 previousMousePos;
     private Vector2 currentMousePos;
 
@@ -20,7 +22,7 @@ public class CameraController : MonoBehaviour
     {
         transform.LookAt(player.transform.position + playerOffset);
     }
-    private void Update()
+    private void LateUpdate()
     {
         Vector3 mousePos = Input.mousePosition;
         if (Input.GetMouseButtonDown(2))
@@ -34,7 +36,16 @@ public class CameraController : MonoBehaviour
 
             Vector2 mousePosDiff = currentMousePos - previousMousePos;
             transform.RotateAround(player.transform.position + playerOffset, Vector3.up, mousePosDiff.x * rotateSpeed);
-            transform.RotateAround(player.transform.position + playerOffset, -transform.right, mousePosDiff.y * rotateSpeed);
+
+            //TODO maybe look at resulting angle instead of limiting angle speed
+            float angle = Mathf.Clamp(mousePosDiff.y * rotateSpeed, -2f, 2f);
+
+            if ((angle < 0 && transform.eulerAngles.x < maxVerticalAngle) ||
+                 angle > 0 && transform.eulerAngles.x > minVerticalAngle)
+            {
+                transform.RotateAround(player.transform.position + playerOffset, -transform.right, angle);
+            }
+            
             previousMousePos = currentMousePos;
         }
 

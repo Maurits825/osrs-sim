@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private const float modelRotationSpeed = 250;
     private float modelMoveSpeed;
     private const float modelMoveSpeedRun = 3.0f; //TODO make this faster?
-    private const float modelMoveSpeedWalk = 1;
+    private const float modelMoveSpeedWalk = 1.5f;
 
     private TickManager tickManager;
     private Movement movement;
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnGameTick()
     {
-        //find path every tick for now, could make this better
+        //find path every tick for now, could make this better -- add states, with scriptable objects?
         Vector3Int? nextTile = movement.ProcessMovement(tileClicked);
         if (nextTile.HasValue)
         {
