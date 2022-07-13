@@ -12,6 +12,7 @@ public class GameStateUI : MonoBehaviour
     }
     private void Update()
     {
-        gameStateText.text = gameState.currentState.ToString();
+        gameStateText.text = gameState.currentState.ToString() + "\n" +
+            gameState.currentTick.ToString();
     }
 }

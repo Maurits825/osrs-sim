@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: GameState
   m_EditorClassIdentifier: 
   currentState: 0
+  tickLength: 0.6
+  currentTick: 117

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameState", menuName = "GameState")]
@@ -14,4 +15,18 @@ public class GameStates : ScriptableObject
     }
 
     public States currentState = States.Idle;
+
+    public float tickLength = 0.6f;
+
+    public int startTick = 0;
+    [NonSerialized]
+    public int currentTick = 0;
+
+    public void OnAfterDeserialize()
+    {
+        currentTick = startTick;
+    }
+
+    public void OnBeforeSerialize() { }
 }
+

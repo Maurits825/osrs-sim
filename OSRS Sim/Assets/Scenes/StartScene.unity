@@ -1524,7 +1524,7 @@ GameObject:
   - component: {fileID: 1978377314}
   - component: {fileID: 1978377313}
   m_Layer: 0
-  m_Name: TickManager
+  m_Name: TickController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1542,8 +1542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87675eb110469845b0902f9503f6ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tickLength: 0.6
-  gameControllerObject: {fileID: 1590769919}
+  gameState: {fileID: 11400000, guid: 5342a67ed79d8d24b98fe6331ed0d947, type: 2}
+  gameController: {fileID: 1590769920}
 --- !u!4 &1978377314
 Transform:
   m_ObjectHideFlags: 0
