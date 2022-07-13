@@ -47,24 +47,44 @@ public class GameController : MonoBehaviour
 
     public void OnGameTick()
     {
+        States nextGameState = gameState;
         movement.OnGameTick();
 
         switch (gameState)
         {
             case States.Idle:
                 break;
+
             case States.TileClicked:
                 if (tileClicked != movement.CurrentPlayerTile)
                 {
                     Vector3Int nextTile = movement.ProcessMovement(tileClicked);
                     playerController.OnGameTick(nextTile);
+                    nextGameState = States.Moving;
+                }
+                else
+                {
+                    nextGameState = States.Idle;
                 }
                 break;
+
             case States.Moving:
+                if (tileClicked == movement.CurrentPlayerTile)
+                {
+                    nextGameState = States.Idle;
+                }
+                else
+                {
+                    Vector3Int nextTile = movement.ProcessMovement(tileClicked);
+                    playerController.OnGameTick(nextTile);
+                }
                 break;
+
             default:
                 break;
         }
+
+        gameState = nextGameState;
         
     }
 

@@ -3,7 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerVariables", menuName = "PlayerVariables")]
 public class PlayerVariables : ScriptableObject
 {
+    [SerializeField]
     private float runEnergy;
+
     public float RunEnergy
     { 
         get { return runEnergy; }
