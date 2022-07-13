@@ -2,22 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Man : MonoBehaviour, IEnemy
+public class Man : Enemy
 {
-    public void OnGameTick()
+    public override void OnGameTick()
     {
         Debug.Log("man attacks");
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log("start man");
     }
 }

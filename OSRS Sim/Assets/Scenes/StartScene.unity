@@ -1272,8 +1272,8 @@ MonoBehaviour:
   tileMarker: {fileID: 960376515}
   gameState: {fileID: 11400000, guid: 5342a67ed79d8d24b98fe6331ed0d947, type: 2}
   playerController: {fileID: 1894020713}
-  enemyController: {fileID: 134496249}
   movement: {fileID: 1894020715}
+  combatController: {fileID: 1894020717}
 --- !u!4 &1590769921
 Transform:
   m_ObjectHideFlags: 0
@@ -1301,6 +1301,7 @@ GameObject:
   - component: {fileID: 1894020713}
   - component: {fileID: 1894020715}
   - component: {fileID: 1894020716}
+  - component: {fileID: 1894020717}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -1364,6 +1365,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerVariables: {fileID: 11400000, guid: bd4aaecc819e43c4c9f9690736a833a7, type: 2}
+--- !u!114 &1894020717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894020712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc7da5be4a172574d9f162a7ee818ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentEnemy: {fileID: 0}
 --- !u!1 &1917028221
 GameObject:
   m_ObjectHideFlags: 0

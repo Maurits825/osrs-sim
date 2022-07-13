@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   tickLength: 0.6
-  currentTick: 117
+  startTick: 0

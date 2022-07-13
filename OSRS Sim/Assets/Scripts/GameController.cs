@@ -13,11 +13,12 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameStates gameState;
 
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private EnemyController enemyController;
     [SerializeField] private Movement movement;
+    [SerializeField] private CombatController combatController;
 
     private Vector3Int tileClicked;
     private Vector3Int enemyTileClicked;
+    private Enemy enemyClicked;
     private Vector3Int lastTile;
 
     private void Start()
@@ -28,6 +29,7 @@ public class GameController : MonoBehaviour
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit raycastHit;
+        //TODO refactor to maybe use one raycast? inverse layermask with unwalkable?
         if (Physics.Raycast(ray, out raycastHit, float.MaxValue, enemyMask))
         {
             //TODO get tile location from enemy
@@ -37,6 +39,7 @@ public class GameController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 enemyTileClicked = tileLocation;
+                enemyClicked = raycastHit.collider.GetComponent<Enemy>();
                 gameState.currentState = GameStates.States.EnemyClicked;
             }
         }
@@ -75,6 +78,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case GameStates.States.EnemyClicked:
+                combatController.currentEnemy = enemyClicked;
                 nextGameState = HandleGenericTileClick(enemyTileClicked, GameStates.States.MovingToEnemy, GameStates.States.Attacking);
                 break;
 
@@ -86,6 +90,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case GameStates.States.Attacking:
+                combatController.OnGameTick();
                 break;
 
             default:

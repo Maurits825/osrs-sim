@@ -4,22 +4,28 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public IEnemy currentEnemy;
+    public static EnemyController Instance { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
+    private List<Enemy> enemies = new();
+
+    private void Awake()
     {
-        
+        if (EnemyController.Instance == null)
+        {
+            EnemyController.Instance = this;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RegisterEnemy(Enemy enemy)
     {
-        
+        enemies.Add(enemy);
     }
 
     public void OnGameTick()
     {
-        currentEnemy.OnGameTick();
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.OnGameTick();
+        }
     }
 }
