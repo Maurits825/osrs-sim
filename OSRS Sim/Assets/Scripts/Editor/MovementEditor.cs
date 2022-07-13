@@ -18,10 +18,6 @@ public class MovementEditor : Editor
         DrawDefaultInspector();
         serializedObject.Update();
 
-        Movement movement = (Movement)target;
-
-        runEnergyRegen.floatValue = EditorGUILayout.Slider("Run Energy Regen", runEnergyRegen.floatValue, 0, 100);
-
         serializedObject.ApplyModifiedProperties();
     }
 }

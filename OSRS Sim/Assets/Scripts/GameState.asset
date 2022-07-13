@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65e54881950cbbb48bb697471994d950, type: 3}
-  m_Name: PlayerVariables
+  m_Script: {fileID: 11500000, guid: 581b4c1a71f449d4ca638d83f5fa9595, type: 3}
+  m_Name: GameState
   m_EditorClassIdentifier: 
-  runEnergy: 50
-  maxRunEnergy: 100
-  isRunning: 1
+  currentState: 0

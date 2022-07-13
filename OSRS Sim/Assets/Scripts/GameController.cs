@@ -7,21 +7,18 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask enemyMask;
     [SerializeField] private GameObject tileMarker;
     [SerializeField] private GameObject playerObject;
-    private enum States
-    {
-        Idle = 0,
-        TileClicked,
-        Moving,
-    }
+
+    [SerializeField] private GameStates gameState;
 
     private PlayerController playerController;
     private Movement movement;
 
-    private States gameState = States.Idle;
-
     private Vector3Int tileClicked;
+    private Vector3Int enemyTileClicked;
+    private Vector3Int lastTile;
 
     private void Start()
     {
@@ -32,7 +29,20 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, groundMask))
+        RaycastHit raycastHit;
+        if (Physics.Raycast(ray, out raycastHit, float.MaxValue, enemyMask))
+        {
+            //TODO get tile location from enemy
+            Vector3Int tileLocation = GetTileLocation(raycastHit.point);
+            tileMarker.transform.position = tileLocation;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                enemyTileClicked = tileLocation;
+                gameState.currentState = GameStates.States.EnemyClicked;
+            }
+        }
+        else if (Physics.Raycast(ray, out raycastHit, float.MaxValue, groundMask))
         {
             Vector3Int tileLocation = GetTileLocation(raycastHit.point);
             tileMarker.transform.position = tileLocation;
@@ -40,51 +50,52 @@ public class GameController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 tileClicked = tileLocation;
-                gameState = States.TileClicked;
+                gameState.currentState = GameStates.States.TileClicked;
             }
         }
     }
 
     public void OnGameTick()
     {
-        States nextGameState = gameState;
+        GameStates.States nextGameState = gameState.currentState;
         movement.OnGameTick();
 
-        switch (gameState)
+        switch (gameState.currentState)
         {
-            case States.Idle:
+            case GameStates.States.Idle:
                 break;
 
-            case States.TileClicked:
-                if (tileClicked != movement.CurrentPlayerTile)
+            case GameStates.States.TileClicked:
+                nextGameState = HandleGenericTileClick(tileClicked, GameStates.States.Moving, GameStates.States.Idle);
+                break;
+
+            case GameStates.States.Moving:
+                if (HandleGenericMoving(tileClicked))
                 {
-                    Vector3Int nextTile = movement.ProcessMovement(tileClicked);
-                    playerController.OnGameTick(nextTile);
-                    nextGameState = States.Moving;
-                }
-                else
-                {
-                    nextGameState = States.Idle;
+                    nextGameState = GameStates.States.Idle;
                 }
                 break;
 
-            case States.Moving:
-                if (tileClicked == movement.CurrentPlayerTile)
+            case GameStates.States.EnemyClicked:
+                nextGameState = HandleGenericTileClick(enemyTileClicked, GameStates.States.MovingToEnemy, GameStates.States.Attacking);
+                break;
+
+            case GameStates.States.MovingToEnemy:
+                if (HandleGenericMoving(enemyTileClicked))
                 {
-                    nextGameState = States.Idle;
+                    nextGameState = GameStates.States.Attacking;
                 }
-                else
-                {
-                    Vector3Int nextTile = movement.ProcessMovement(tileClicked);
-                    playerController.OnGameTick(nextTile);
-                }
+                break;
+
+            case GameStates.States.Attacking:
                 break;
 
             default:
                 break;
         }
 
-        gameState = nextGameState;
+        lastTile = movement.CurrentPlayerTile;
+        gameState.currentState = nextGameState;
         
     }
 
@@ -96,11 +107,32 @@ public class GameController : MonoBehaviour
             Mathf.RoundToInt(worldLocation.z));
     }
 
-    void OnDrawGizmos()
+    private GameStates.States HandleGenericTileClick(Vector3Int tile, GameStates.States notAtTile, GameStates.States atTile)
     {
-        if (Application.isPlaying)
+        if (tile != movement.CurrentPlayerTile)
         {
-            Handles.Label(movement.CurrentPlayerTile + (2 * Vector3.up), gameState.ToString());
+            Vector3Int nextTile = movement.ProcessMovement(tile);
+            playerController.OnGameTick(nextTile);
+            return notAtTile;
+        }
+        else
+        {
+            return atTile;
+        }
+    }
+
+    private bool HandleGenericMoving(Vector3Int tile)
+    {
+        Vector3Int nextTile = movement.ProcessMovement(tile);
+        if (lastTile == movement.CurrentPlayerTile)
+        {
+            return true;
+        }
+        else
+        {
+
+            playerController.OnGameTick(nextTile);
+            return false;
         }
     }
 }

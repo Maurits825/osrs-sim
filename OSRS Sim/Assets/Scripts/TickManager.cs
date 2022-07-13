@@ -15,7 +15,6 @@ public class TickManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         if (TickManager.Instance == null)
         {
             TickManager.Instance = this;

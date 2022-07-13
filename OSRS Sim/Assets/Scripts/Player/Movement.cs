@@ -39,6 +39,11 @@ public class Movement : MonoBehaviour
         
         List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
 
+        if (path.Count <= 1)
+        {
+            return CurrentPlayerTile;
+        }
+
         int tileIndex = 1;
         //TODO figure run energy drain maths
         float runEnergyDrain = 0;
