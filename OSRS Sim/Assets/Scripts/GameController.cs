@@ -9,12 +9,12 @@ public class GameController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask enemyMask;
     [SerializeField] private GameObject tileMarker;
-    [SerializeField] private GameObject playerObject;
 
     [SerializeField] private GameStates gameState;
 
-    private PlayerController playerController;
-    private Movement movement;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private EnemyController enemyController;
+    [SerializeField] private Movement movement;
 
     private Vector3Int tileClicked;
     private Vector3Int enemyTileClicked;
@@ -22,11 +22,9 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        playerController = playerObject.GetComponent<PlayerController>();
-        movement = playerObject.GetComponent<Movement>();
     }
 
-    private void Update()
+    private void Update() //TODO buffer the next state transition in a var?
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit raycastHit;
