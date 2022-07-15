@@ -5,6 +5,7 @@ using UnityEngine;
 public class CombatController : MonoBehaviour
 {
     public Enemy currentEnemy;
+
     [SerializeField] private PlayerVariables playerVariables;
 
     public void OnGameTick()

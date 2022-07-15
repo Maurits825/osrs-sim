@@ -141,4 +141,9 @@ public class GameController : MonoBehaviour
             return false;
         }
     }
+
+    private void OnApplicationQuit()
+    {
+        playerVariables.ResetValues();
+    }
 }

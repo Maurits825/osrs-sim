@@ -15,10 +15,22 @@ public class PlayerVariables : ScriptableObject
         }
     }
     public float maxRunEnergy = 100;
-    public bool isRunning = false;
+    public bool isRunning = true;
 
     public int maxHealth = 100;
     public int health;
 
     public Vector3Int currentTile;
+
+    public void OnAfterDeserialize()
+    {
+        ResetValues();
+    }
+
+    public void ResetValues()
+    {
+        health = maxHealth;
+        runEnergy = maxRunEnergy;
+        currentTile = Vector3Int.zero;
+    }
 }

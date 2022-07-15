@@ -15,9 +15,6 @@ public class Movement : MonoBehaviour
     private GameObject playerTileMarker;
     private void Start()
     {
-        playerVariables.RunEnergy = 100;
-        playerVariables.isRunning = true;
-
         CreateTileMarkerPool();
 
         pathFinder = new PathFinder();

@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e54881950cbbb48bb697471994d950, type: 3}
   m_Name: PlayerVariables
   m_EditorClassIdentifier: 
-  runEnergy: 50
+  runEnergy: 100
   maxRunEnergy: 100
   isRunning: 1
+  maxHealth: 100
+  health: 100
+  currentTile: {x: 1, y: 0, z: -1}

@@ -71,6 +71,7 @@ public abstract class Enemy : MonoBehaviour
     public virtual void Damage(int amount)
     {
         enemyInfo.health -= amount;
+        EventController.Instance.SpawnHitsplat(amount);
 
         if (currentState == States.Idle)
         {
