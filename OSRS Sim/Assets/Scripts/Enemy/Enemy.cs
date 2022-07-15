@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public EnemyInfo defaultEnemyInfo;
     public EnemyInfo enemyInfo;
 
     public enum States
@@ -53,6 +54,11 @@ public abstract class Enemy : MonoBehaviour
         }
 
         currentState = nextState;
+    }
+
+    private void Awake()
+    {
+        enemyInfo = Instantiate(defaultEnemyInfo);
     }
 
     protected virtual void Start()

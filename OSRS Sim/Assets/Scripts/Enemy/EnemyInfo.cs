@@ -19,7 +19,7 @@ public class EnemyInfo : ScriptableObject
 
     public Vector3Int currentTile;
 
-    public void OnAfterDeserialize()
+    public void OnEnable()
     {
         health = maxHealth;
     }

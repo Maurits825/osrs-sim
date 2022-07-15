@@ -9,7 +9,7 @@ public class HealthBarUI : MonoBehaviour
 
     private float offset;
 
-    private void Start()
+    public virtual void Start()
     {
         offset = obj.GetComponent<MeshRenderer>().bounds.size.y;
         barImage = transform.Find("health").GetComponent<Image>();
