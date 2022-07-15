@@ -61,8 +61,7 @@ public class Movement : MonoBehaviour
             playerVariables.isRunning = false;
         }
 
-        Vector3Int nextTile = path[tileIndex];
-        playerVariables.currentTile = nextTile;
+        playerVariables.currentTile = path[tileIndex];
 
         if (Settings.s.drawPlayerTile)
         {
@@ -79,7 +78,7 @@ public class Movement : MonoBehaviour
             DrawPath(path);
         }
 
-        return nextTile;
+        return playerVariables.currentTile;
     }
 
     private void DrawPath(List<Vector3Int> path)

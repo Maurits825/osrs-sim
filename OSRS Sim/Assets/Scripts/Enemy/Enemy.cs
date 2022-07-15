@@ -4,9 +4,8 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    public EnemyStats stats;
-    public CombatController combatController;
-    public Vector3Int CurrentTile { get; private set; }
+    public EnemyInfo enemyInfo;
+
     public enum States
     {
         Idle = 0,
@@ -16,10 +15,15 @@ public abstract class Enemy : MonoBehaviour
 
     public States currentState = States.Idle;
 
+    [SerializeField] private CombatController combatController;
+    [SerializeField] private PlayerVariables playerVariables;
+
     private PathFinder pathFinder;
 
     public virtual void OnGameTick()
     {
+        States nextState = currentState;
+
         switch (currentState)
         {
             case States.Idle:
@@ -27,22 +31,36 @@ public abstract class Enemy : MonoBehaviour
 
             case States.MovingToTarget:
                 FindPath();
+                if (IsInRange())
+                {
+                    nextState = States.AttackingTarget;
+                }
                 break;
 
             case States.AttackingTarget:
+                if (IsInRange())
+                {
+                    Attack();
+                }
+                else
+                {
+                    nextState = States.MovingToTarget;
+                }
                 break;
 
             default:
                 break;
         }
+
+        currentState = nextState;
     }
 
     protected virtual void Start()
     {
-        Debug.Log("Register: " + stats.enemyName.ToString());
+        Debug.Log("Register: " + enemyInfo.enemyName.ToString());
         EnemyController.Instance.RegisterEnemy(this);
 
-        if (stats.isAggresive)
+        if (enemyInfo.isAggresive)
         {
             currentState = States.MovingToTarget;
         }
@@ -50,14 +68,37 @@ public abstract class Enemy : MonoBehaviour
         pathFinder = new PathFinder();
     }
 
-    public void DealDamage(int amount)
+    public virtual void Damage(int amount)
     {
-        stats.health -= amount;
-        currentState = States.MovingToTarget;
+        enemyInfo.health -= amount;
+
+        if (currentState == States.Idle)
+        {
+            currentState = States.MovingToTarget;
+        }
     }
 
+    protected virtual void Attack()
+    {
+        //TODO make a function later to do dmg math with player def and enemy accuracy
+        int damageAmount = Random.Range(0, enemyInfo.maxHit + 1);
+        combatController.Damage(damageAmount);
+    }
+
+    //TODO will actually need a path finding that is like npc
     private void FindPath()
     {
-        //List<Vector3Int> path = pathFinder.FindPath(CurrentTile, PlayerController);
+        List<Vector3Int> path = pathFinder.FindPath(enemyInfo.currentTile, playerVariables.currentTile);
+        enemyInfo.currentTile = path[enemyInfo.moveSpeed];
+    }
+
+    private bool IsInRange()
+    {
+        int x = playerVariables.currentTile.x - enemyInfo.currentTile.x;
+        int y = playerVariables.currentTile.z - enemyInfo.currentTile.z;
+        int range = Mathf.Max(x, y);
+
+        //TODO handle diff enemysizes, walking under?
+        return range <= enemyInfo.attackRange;
     }
 }

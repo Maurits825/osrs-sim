@@ -14,3 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Man
   maxHealth: 100
+  canMove: 1
+  moveSpeed: 1
+  isAggresive: 0
+  attackRange: 1
+  maxHit: 10
+  currentTile: {x: 0, y: 0, z: 0}

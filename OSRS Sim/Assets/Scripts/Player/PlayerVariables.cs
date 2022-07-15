@@ -17,5 +17,8 @@ public class PlayerVariables : ScriptableObject
     public float maxRunEnergy = 100;
     public bool isRunning = false;
 
+    public int maxHealth = 100;
+    public int health;
+
     public Vector3Int currentTile;
 }
