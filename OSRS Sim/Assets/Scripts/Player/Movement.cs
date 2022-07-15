@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public Vector3Int CurrentPlayerTile { get; private set; }
     [SerializeField] private PlayerVariables playerVariables;
 
     private List<GameObject> pooledTileMarker;
@@ -37,11 +36,11 @@ public class Movement : MonoBehaviour
     {
         ClearCurrentPathTiles();
         
-        List<Vector3Int> path = pathFinder.FindPath(CurrentPlayerTile, target);
+        List<Vector3Int> path = pathFinder.FindPath(playerVariables.currentTile, target);
 
         if (path.Count <= 1)
         {
-            return CurrentPlayerTile;
+            return playerVariables.currentTile;
         }
 
         int tileIndex = 1;
@@ -63,12 +62,12 @@ public class Movement : MonoBehaviour
         }
 
         Vector3Int nextTile = path[tileIndex];
-        CurrentPlayerTile = nextTile;
+        playerVariables.currentTile = nextTile;
 
         if (Settings.s.drawPlayerTile)
         {
             playerTileMarker.SetActive(true);
-            playerTileMarker.transform.position = CurrentPlayerTile;
+            playerTileMarker.transform.position = playerVariables.currentTile;
         }
         else
         {

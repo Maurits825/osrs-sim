@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject tileMarker;
 
     [SerializeField] private GameStates gameState;
+    [SerializeField] private PlayerVariables playerVariables;
 
     [SerializeField] private PlayerController playerController;
     [SerializeField] private Movement movement;
@@ -99,7 +100,7 @@ public class GameController : MonoBehaviour
                 break;
         }
 
-        lastTile = movement.CurrentPlayerTile;
+        lastTile = playerVariables.currentTile;
         gameState.currentState = nextGameState;
         
     }
@@ -114,7 +115,7 @@ public class GameController : MonoBehaviour
 
     private GameStates.States HandleGenericTileClick(Vector3Int tile, GameStates.States notAtTile, GameStates.States atTile)
     {
-        if (tile != movement.CurrentPlayerTile)
+        if (tile != playerVariables.currentTile)
         {
             Vector3Int nextTile = movement.ProcessMovement(tile);
             playerController.OnGameTick(nextTile);
@@ -129,7 +130,7 @@ public class GameController : MonoBehaviour
     private bool HandleGenericMoving(Vector3Int tile)
     {
         Vector3Int nextTile = movement.ProcessMovement(tile);
-        if (lastTile == movement.CurrentPlayerTile)
+        if (lastTile == playerVariables.currentTile)
         {
             return true;
         }

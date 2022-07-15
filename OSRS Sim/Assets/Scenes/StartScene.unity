@@ -272,6 +272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 61725c9df4fecf64790e11747a8c2d2b, type: 2}
+  combatController: {fileID: 0}
+  currentState: 0
 --- !u!1 &134496247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,6 +1274,7 @@ MonoBehaviour:
     m_Bits: 256
   tileMarker: {fileID: 960376515}
   gameState: {fileID: 11400000, guid: 5342a67ed79d8d24b98fe6331ed0d947, type: 2}
+  playerVariables: {fileID: 11400000, guid: bd4aaecc819e43c4c9f9690736a833a7, type: 2}
   playerController: {fileID: 1894020713}
   movement: {fileID: 1894020715}
   combatController: {fileID: 1894020717}
