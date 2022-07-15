@@ -5,23 +5,21 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     [SerializeField] private PlayerVariables playerVariables;
+    [SerializeField] private ObjectPooler tileMarkerPool;
 
-    private List<GameObject> pooledTileMarker;
     private List<GameObject> currentPathTiles = new List<GameObject>();
-    [SerializeField] private GameObject pathTileMarker;
 
     private PathFinder pathFinder;
     private RunEnergy runEnergy;
     private GameObject playerTileMarker;
+
     private void Start()
     {
-        CreateTileMarkerPool();
-
         pathFinder = new PathFinder();
         runEnergy = GetComponent<RunEnergy>();
 
         //TODO when game start set currentplayertile?
-        playerTileMarker = GetPooledTileMarker();
+        playerTileMarker = tileMarkerPool.GetPooledObject();
     }
 
     public void OnGameTick()
@@ -83,7 +81,7 @@ public class Movement : MonoBehaviour
         int startIndex = 1;
         foreach (Vector3Int tile in path.GetRange(startIndex, path.Count - startIndex))
         {
-            GameObject tileObj = GetPooledTileMarker();
+            GameObject tileObj = tileMarkerPool.GetPooledObject();
             tileObj.transform.position = tile;
             currentPathTiles.Add(tileObj);
             tileObj.SetActive(true);
@@ -98,29 +96,5 @@ public class Movement : MonoBehaviour
         }
 
         currentPathTiles.Clear();
-    }
-
-    private void CreateTileMarkerPool()
-    {
-        pooledTileMarker = new List<GameObject>();
-        GameObject tmp;
-        for (int i = 0; i < 50; i++)
-        {
-            tmp = Instantiate(pathTileMarker);
-            tmp.SetActive(false);
-            pooledTileMarker.Add(tmp);
-        }
-    }
-
-    private GameObject GetPooledTileMarker()
-    {
-        for (int i = 0; i < 50; i++)
-        {
-            if (!pooledTileMarker[i].activeInHierarchy)
-            {
-                return pooledTileMarker[i];
-            }
-        }
-        return null;
     }
 }

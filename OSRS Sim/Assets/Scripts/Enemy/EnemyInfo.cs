@@ -7,7 +7,6 @@ public class EnemyInfo : ScriptableObject
     public string enemyName;
 
     public int maxHealth;
-    [NonSerialized]
     public int health;
 
     public bool canMove;

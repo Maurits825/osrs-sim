@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421e86893a8352e4ca7001a221722619, type: 3}
   m_Name: DefaultGameSettings
   m_EditorClassIdentifier: 
-  drawPlayerPath: 0
+  drawPlayerPath: 1
   drawPlayerTile: 1
