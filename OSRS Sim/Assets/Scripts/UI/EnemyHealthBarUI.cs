@@ -12,8 +12,9 @@ public class EnemyHealthBarUI : HealthBarUI
         enemyInfo = transform.parent.parent.GetComponent<Enemy>().enemyInfo;
     }
 
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         SetHealth((float)enemyInfo.health / enemyInfo.maxHealth);
     }
 }

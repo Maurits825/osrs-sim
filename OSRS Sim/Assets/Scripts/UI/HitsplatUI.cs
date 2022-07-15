@@ -1,28 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class HitsplatUI : MonoBehaviour
 {
-    public static Transform hitsplat;
-    private TextMeshPro text;
+    private TextMeshProUGUI text;
+    private Transform obj;
+    private Camera cam;
 
-    public static HitsplatUI Create()
+    public void Setup(int damageAmount, Transform obj, Camera cam)
     {
-        Transform newHitsplat = Instantiate(hitsplat, Vector3.zero, Quaternion.identity);
-        HitsplatUI hitsplatUI = newHitsplat.GetComponent<HitsplatUI>();
-        hitsplatUI.Setup(20);
-        return hitsplatUI;
-    }
+        this.cam = cam;
+        this.obj = obj;
 
-    private void Awake()
-    {
-        text = transform.GetComponent<TextMeshPro>();
-    }
-
-    public void Setup(int damageAmount)
-    {
+        text = transform.GetComponent<TextMeshProUGUI>();
         text.SetText(damageAmount.ToString());
+        
+        transform.position = cam.WorldToScreenPoint(obj.transform.position);
+
+        gameObject.SetActive(true);
+    }
+
+    private void Update()
+    {
+        transform.position = cam.WorldToScreenPoint(obj.transform.position);
     }
 }

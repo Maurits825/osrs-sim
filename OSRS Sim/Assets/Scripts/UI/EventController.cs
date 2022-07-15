@@ -14,9 +14,9 @@ public class EventController : MonoBehaviour
         }
     }
 
-    public event Action<int> OnSpawnHitsplat;
-    public void SpawnHitsplat(int amount)
+    public event Action<int, Transform> OnSpawnHitsplat;
+    public void SpawnHitsplat(int amount, Transform position)
     {
-        OnSpawnHitsplat?.Invoke(amount);
+        OnSpawnHitsplat?.Invoke(amount, position);
     }
 }

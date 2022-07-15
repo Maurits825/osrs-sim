@@ -32,5 +32,6 @@ public class PlayerVariables : ScriptableObject
         health = maxHealth;
         runEnergy = maxRunEnergy;
         currentTile = Vector3Int.zero;
+        isRunning = true;
     }
 }

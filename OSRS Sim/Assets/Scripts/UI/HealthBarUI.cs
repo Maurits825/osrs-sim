@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HealthBarUI : MonoBehaviour
 {
-    [SerializeField] private Transform cam;
+    [SerializeField] private Camera cam;
     [SerializeField] private GameObject obj;
     private Image barImage;
 
@@ -15,10 +15,9 @@ public class HealthBarUI : MonoBehaviour
         barImage = transform.Find("health").GetComponent<Image>();
     }
 
-    private void LateUpdate()
+    public virtual void Update()
     {
-        transform.position = obj.transform.position + (offset * Vector3.up);
-        transform.LookAt(transform.position + cam.forward);
+        transform.position = cam.WorldToScreenPoint(obj.transform.position + (offset * Vector3.up));
     }
 
     protected void SetHealth(float amount)

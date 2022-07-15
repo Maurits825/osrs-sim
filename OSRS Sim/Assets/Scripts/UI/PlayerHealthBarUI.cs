@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerHealthBarUI : HealthBarUI
 {
     [SerializeField] private PlayerVariables playerVariables;
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         SetHealth((float)playerVariables.health / playerVariables.maxHealth);
     }
 }

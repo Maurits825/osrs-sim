@@ -20,6 +20,7 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private PlayerVariables playerVariables;
 
     private PathFinder pathFinder;
+    [SerializeField] private GameObject model;
 
     public virtual void OnGameTick()
     {
@@ -77,7 +78,7 @@ public abstract class Enemy : MonoBehaviour
     public virtual void Damage(int amount)
     {
         enemyInfo.health -= amount;
-        EventController.Instance.SpawnHitsplat(amount);
+        EventController.Instance.SpawnHitsplat(amount, model.transform);
 
         if (currentState == States.Idle)
         {

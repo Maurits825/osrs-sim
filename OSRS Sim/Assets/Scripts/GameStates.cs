@@ -14,7 +14,7 @@ public class GameStates : ScriptableObject
         Attacking,
     }
 
-    public States currentState = States.Idle;
+    public States currentState;
 
     public float tickLength = 0.6f;
 
@@ -24,7 +24,13 @@ public class GameStates : ScriptableObject
 
     public void OnAfterDeserialize()
     {
+        ResetValues();
+    }
+
+    public void ResetValues()
+    {
         currentTick = startTick;
+        currentState = States.Idle;
     }
 }
 

@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 enemyTileClicked = tileLocation;
-                enemyClicked = raycastHit.collider.GetComponent<Enemy>();
+                enemyClicked = raycastHit.collider.transform.root.GetComponent<Enemy>();
                 gameState.currentState = GameStates.States.EnemyClicked;
             }
         }
@@ -145,5 +145,6 @@ public class GameController : MonoBehaviour
     private void OnApplicationQuit()
     {
         playerVariables.ResetValues();
+        gameState.ResetValues();
     }
 }
