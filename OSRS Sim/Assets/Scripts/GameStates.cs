@@ -20,13 +20,11 @@ public class GameStates : ScriptableObject
 
     public int startTick = 0;
     [NonSerialized]
-    public int currentTick = 0;
+    public int currentTick;
 
     public void OnAfterDeserialize()
     {
         currentTick = startTick;
     }
-
-    public void OnBeforeSerialize() { }
 }
 

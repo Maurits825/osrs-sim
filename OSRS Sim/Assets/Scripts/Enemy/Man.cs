@@ -9,8 +9,9 @@ public class Man : Enemy
         Debug.Log("man attacks");
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         Debug.Log("start man");
     }
 }

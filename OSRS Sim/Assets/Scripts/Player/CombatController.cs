@@ -8,6 +8,8 @@ public class CombatController : MonoBehaviour
 
     public void OnGameTick()
     {
-
+        Debug.Log("Player attacking: " + currentEnemy.stats.name);
+        //TODO dmg type later
+        currentEnemy.DealDamage(10);
     }
 }

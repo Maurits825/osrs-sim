@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO check optimization at some point, using hash sets
 public class PathFinder
 {
     private const int MOVE_STRAIGHT_COST = 10;
