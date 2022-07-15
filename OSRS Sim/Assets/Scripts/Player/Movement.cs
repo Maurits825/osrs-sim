@@ -18,6 +18,8 @@ public class Movement : MonoBehaviour
         pathFinder = new PathFinder();
         runEnergy = GetComponent<RunEnergy>();
 
+        tileMarkerPool.CreatePool();
+
         //TODO when game start set currentplayertile?
         playerTileMarker = tileMarkerPool.GetPooledObject();
     }

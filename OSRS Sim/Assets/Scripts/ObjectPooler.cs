@@ -8,12 +8,7 @@ public class ObjectPooler : ScriptableObject
     [SerializeField] private int totalPooledObj;
     private List<GameObject> pooledObjects;
 
-    public void OnEnable()
-    {
-        CreatePool();
-    }
-
-    private void CreatePool()
+    public void CreatePool()
     {
         pooledObjects = new List<GameObject>();
         GameObject tmp;
