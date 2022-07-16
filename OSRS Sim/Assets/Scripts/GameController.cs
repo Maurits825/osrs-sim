@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
         GameStates.States nextGameState = gameState.currentState;
         
         movement.OnGameTick();
-        EnemyController.Instance.OnGameTick();
+        NpcController.Instance.OnGameTick();
 
         switch (gameState.currentState)
         {

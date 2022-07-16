@@ -19,4 +19,10 @@ public class EventController : MonoBehaviour
     {
         OnSpawnHitsplat?.Invoke(amount, position);
     }
+
+    public event Action OnGameTick;
+    public void GameTick()
+    {
+        OnGameTick?.Invoke();
+    }
 }

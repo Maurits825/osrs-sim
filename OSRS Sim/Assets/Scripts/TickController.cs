@@ -28,6 +28,7 @@ public class TickController : MonoBehaviour
             gameState.currentTick++;
 
             gameController.OnGameTick();
+            EventController.Instance.GameTick();
         }
     }
 }

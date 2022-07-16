@@ -65,7 +65,7 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Start()
     {
         Debug.Log("Register: " + enemyInfo.enemyName.ToString());
-        EnemyController.Instance.RegisterEnemy(this);
+        //EnemyController.Instance.RegisterEnemy(this);
 
         if (enemyInfo.isAggresive)
         {
