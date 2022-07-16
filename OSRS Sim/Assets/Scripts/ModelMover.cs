@@ -13,8 +13,7 @@ public class ModelMover : MonoBehaviour
 
     private const float modelRotationSpeed = 250;
     private float modelMoveSpeed;
-    private const float modelMoveSpeedRun = 3.0f; //TODO make this faster? also just make it twice as fast as walk
-    private const float modelMoveSpeedWalk = 1.5f; //or to speed = tiles moved * x
+    private const float modelMoveSpeedWalk = 1.7f;
 
     private float modelDistanceThreshold = 0.01f;
     private float modelAngleThreshold = 0.01f;
@@ -32,7 +31,7 @@ public class ModelMover : MonoBehaviour
 
             tilesMoved.Enqueue(tiles);
 
-            previousTile = npc.currentTile;//todo is this the probelm]
+            previousTile = npc.currentTile;
         }
     }
 
@@ -74,7 +73,7 @@ public class ModelMover : MonoBehaviour
                 }
             }
 
-            modelMoveSpeed = tiles >= 2 ? modelMoveSpeedRun : modelMoveSpeedWalk;
+            modelMoveSpeed = modelMoveSpeedWalk * tiles;
             Vector3 position = Vector3.MoveTowards(model.position, new Vector3(currentTile.x, model.position.y, currentTile.z), modelMoveSpeed * Time.deltaTime);
             model.position = position;
         }
@@ -82,7 +81,8 @@ public class ModelMover : MonoBehaviour
         if (nextDirections.Count > 0)
         {
             Vector3 currentDirection = nextDirections.Peek();
-            if (Vector3.Angle(model.eulerAngles, currentDirection) <= modelAngleThreshold)
+            float angleDiff = Vector3.Angle(model.forward, currentDirection);
+            if (Vector3.Angle(model.forward, currentDirection) <= modelAngleThreshold)
             {
                 nextDirections.Dequeue();
                 if (nextDirections.Count > 0)
@@ -97,7 +97,7 @@ public class ModelMover : MonoBehaviour
 
             float angle = Mathf.Atan2(currentDirection.x, currentDirection.z) * Mathf.Rad2Deg;
             Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
-            Quaternion.RotateTowards(model.rotation, q, Time.deltaTime * modelRotationSpeed);
+            model.transform.rotation = Quaternion.RotateTowards(model.rotation, q, Time.deltaTime * modelRotationSpeed);
         }
     }
 }

@@ -23,5 +23,6 @@ public class TrueTileIndicator : MonoBehaviour
     private void LateUpdate()
     {
         tileMarker.transform.position = npc.currentTile;
+        tileMarker.transform.rotation = Quaternion.identity;
     }
 }
