@@ -7,17 +7,25 @@ public class NpcMovement : MonoBehaviour, IMovement
     private Npc npc;
 
     private Vector3Int target;
-    private int roamRange = 5;
+    private int roamRange = 5;// TODO put in npcInfo?
     private PathFinder pathFinder;
 
     public void Move()
     {
-        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, target);
+        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, target); //TODO npc path finder
         if (path.Count <= 1)
         {
-            npc.npcStates.nextState = NpcStates.States.Idle;
+            if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
+            {
+                npc.npcStates.nextState = NpcStates.States.AttackingNpc;
+            }
+            else
+            {
+                npc.npcStates.nextState = NpcStates.States.Idle;
+            }
+            
         }
-        if (path.Count <= npc.npcInfo.moveSpeed)
+        else if (path.Count <= npc.npcInfo.moveSpeed)
         {
             npc.currentTile = path[^1];
         }
@@ -37,7 +45,6 @@ public class NpcMovement : MonoBehaviour, IMovement
                 break;
         }
     }
-
 
     private void Start()
     {

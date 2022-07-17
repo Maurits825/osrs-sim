@@ -3,24 +3,33 @@ using UnityEngine.UI;
 
 public class HealthBarUI : MonoBehaviour
 {
+    [SerializeField] private GameObject healthBarPrefab;
+    [SerializeField] private Canvas canvas;
     [SerializeField] private Camera cam;
-    [SerializeField] private GameObject obj;
+    
     private Image barImage;
+    private GameObject healthBar;
+    
+    private Npc npc;
 
     private float offset;
 
-    public virtual void Start()
+    private void Start()
     {
-        offset = obj.GetComponent<MeshRenderer>().bounds.size.y;
-        barImage = transform.Find("health").GetComponent<Image>();
+        offset = GetComponent<MeshRenderer>().bounds.size.y;
+        npc = GetComponent<Npc>();
+
+        healthBar = Instantiate(healthBarPrefab, canvas.transform);
+        barImage = healthBar.transform.Find("health").GetComponent<Image>();
     }
 
-    public virtual void Update()
+    private void Update()
     {
-        transform.position = cam.WorldToScreenPoint(obj.transform.position + (offset * Vector3.up));
+        healthBar.transform.position = cam.WorldToScreenPoint(transform.position + (offset * Vector3.up));
+        SetHealth((float)npc.npcInfo.npcStats.health.current / npc.npcInfo.npcStats.health.initial);
     }
 
-    protected void SetHealth(float amount)
+    private void SetHealth(float amount)
     {
         barImage.fillAmount = amount;
     }

@@ -14,13 +14,13 @@ public class GameController : MonoBehaviour
     [SerializeField] private PlayerVariables playerVariables;
 
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private Movement movement;
     [SerializeField] private CombatController combatController;
 
     private Vector3Int tileClicked;
     private Vector3Int enemyTileClicked;
-    private Enemy enemyClicked;
     private Vector3Int lastTile;
+
+    private Npc npc;
 
     private void Start()
     {
@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 enemyTileClicked = tileLocation;
-                enemyClicked = raycastHit.collider.transform.root.GetComponent<Enemy>();
+                //enemyClicked = raycastHit.collider.transform.root.GetComponent<Enemy>();
                 gameState.currentState = GameStates.States.EnemyClicked;
             }
         }
@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
     {
         GameStates.States nextGameState = gameState.currentState;
         
-        movement.OnGameTick();
+        //movement.OnGameTick();
         NpcController.Instance.OnGameTick();
 
         switch (gameState.currentState)
@@ -81,7 +81,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case GameStates.States.EnemyClicked:
-                combatController.currentEnemy = enemyClicked;
+                //combatController.currentEnemy = enemyClicked;
                 nextGameState = HandleGenericTileClick(enemyTileClicked, GameStates.States.MovingToEnemy, GameStates.States.Attacking);
                 break;
 
@@ -100,7 +100,7 @@ public class GameController : MonoBehaviour
                 break;
         }
 
-        lastTile = playerVariables.currentTile;
+        //lastTile = playerVariables.currentTile;
         gameState.currentState = nextGameState;
         
     }
@@ -115,10 +115,10 @@ public class GameController : MonoBehaviour
 
     private GameStates.States HandleGenericTileClick(Vector3Int tile, GameStates.States notAtTile, GameStates.States atTile)
     {
-        if (tile != playerVariables.currentTile)
+        if (tile != npc.currentTile)
         {
-            Vector3Int nextTile = movement.ProcessMovement(tile);
-            playerController.OnGameTick(nextTile);
+            //Vector3Int nextTile = movement.ProcessMovement(tile);
+            //playerController.OnGameTick(nextTile);
             return notAtTile;
         }
         else
@@ -129,15 +129,15 @@ public class GameController : MonoBehaviour
 
     private bool HandleGenericMoving(Vector3Int tile)
     {
-        Vector3Int nextTile = movement.ProcessMovement(tile);
-        if (lastTile == playerVariables.currentTile)
+        //Vector3Int nextTile = movement.ProcessMovement(tile);
+        if (lastTile == npc.currentTile)
         {
             return true;
         }
         else
         {
 
-            playerController.OnGameTick(nextTile);
+            //playerController.OnGameTick(nextTile);
             return false;
         }
     }

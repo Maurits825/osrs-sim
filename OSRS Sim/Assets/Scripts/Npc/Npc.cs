@@ -12,7 +12,7 @@ public abstract class Npc : MonoBehaviour
     public Vector3Int spawnTile;
     public Vector3Int currentTile;
 
-    private IMovement movement;
+    protected IMovement movement;
 
     private void Awake()
     {
@@ -21,7 +21,7 @@ public abstract class Npc : MonoBehaviour
         currentTile = spawnTile;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         Debug.Log("Register: " + npcInfo.npcName.ToString());
         NpcController.Instance.RegisterNpc(this);
@@ -47,6 +47,7 @@ public abstract class Npc : MonoBehaviour
                 break;
 
             case NpcStates.States.MovingToNpc:
+                movement.Move(); //TODO test this?
                 break;
 
             case NpcStates.States.AttackingNpc:
@@ -57,5 +58,15 @@ public abstract class Npc : MonoBehaviour
         }
 
         npcStates.currentState = npcStates.nextState;
+    }
+
+    private bool IsInRange(Vector3Int target)
+    {
+        int x = target.x - currentTile.x;
+        int y = target.z - currentTile.z;
+        int range = Mathf.Max(x, y);
+
+        //TODO handle diff enemysizes, walking under?
+        return range <= npcInfo.attackRange;
     }
 }

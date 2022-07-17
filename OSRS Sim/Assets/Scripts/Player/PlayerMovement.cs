@@ -2,42 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IMovement
 {
-    [SerializeField] private PlayerVariables playerVariables;
     [SerializeField] private ObjectPooler tileMarkerPool;
+    [SerializeField] private PlayerVariables playerVariables;
 
-    private List<GameObject> currentPathTiles = new List<GameObject>();
-
+    private Npc npc;
     private PathFinder pathFinder;
     private RunEnergy runEnergy;
+
+    private Vector3Int target;
+
+    private List<GameObject> currentPathTiles = new List<GameObject>();
     private GameObject playerTileMarker;
 
-    private void Start()
-    {
-        pathFinder = new PathFinder();
-        runEnergy = GetComponent<RunEnergy>();
-
-        tileMarkerPool.CreatePool(); //TODO create the pool somewhere else if other things want to use this pool?
-
-        //TODO when game start set currentplayertile?
-        playerTileMarker = tileMarkerPool.GetPooledObject();
-    }
-
-    public void OnGameTick()
-    {
-        runEnergy.RegenRun();
-    }
-
-    public Vector3Int ProcessMovement(Vector3Int target)
+    public void Move()
     {
         ClearCurrentPathTiles();
-        
-        List<Vector3Int> path = pathFinder.FindPath(playerVariables.currentTile, target);
+
+        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, target);
 
         if (path.Count <= 1)
         {
-            return playerVariables.currentTile;
+            if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
+            {
+                npc.npcStates.nextState = NpcStates.States.AttackingNpc;
+            }
+            else
+            {
+                npc.npcStates.nextState = NpcStates.States.Idle;
+            }
+
+            return;
         }
 
         int tileIndex = 1;
@@ -58,12 +54,12 @@ public class Movement : MonoBehaviour
             playerVariables.isRunning = false;
         }
 
-        playerVariables.currentTile = path[tileIndex];
+        npc.currentTile = path[tileIndex];
 
         if (Settings.s.drawPlayerTile)
         {
             playerTileMarker.SetActive(true);
-            playerTileMarker.transform.position = playerVariables.currentTile;
+            playerTileMarker.transform.position = npc.currentTile;
         }
         else
         {
@@ -74,8 +70,23 @@ public class Movement : MonoBehaviour
         {
             DrawPath(path);
         }
+    }
 
-        return playerVariables.currentTile;
+    public void OnGameTick()
+    {
+        runEnergy.RegenRun();
+    }
+
+    private void Start()
+    {
+        npc = GetComponent<Npc>();
+        runEnergy = GetComponent<RunEnergy>();
+
+        pathFinder = new PathFinder();
+
+        tileMarkerPool.CreatePool();
+
+        playerTileMarker = tileMarkerPool.GetPooledObject();
     }
 
     private void DrawPath(List<Vector3Int> path)
