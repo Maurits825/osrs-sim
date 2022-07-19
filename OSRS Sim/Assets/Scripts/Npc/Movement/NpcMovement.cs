@@ -70,4 +70,9 @@ public class NpcMovement : MonoBehaviour, IMovement
             return NpcStates.States.Idle;
         }
     }
+
+    public void SetTargetTile(Vector3Int target)
+    {
+        this.target = target;
+    }
 }

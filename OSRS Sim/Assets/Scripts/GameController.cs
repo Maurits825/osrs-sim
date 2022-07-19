@@ -5,16 +5,14 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private LayerMask groundMask;
-    [SerializeField] private LayerMask enemyMask;
     [SerializeField] private GameObject tileMarker;
 
     [SerializeField] private GameStates gameState;
     [SerializeField] private PlayerVariables playerVariables;
 
-    [SerializeField] private PlayerController playerController;
     [SerializeField] private CombatController combatController;
+
+    [SerializeField] private Npc player;
 
     private Vector3Int tileClicked;
     private Vector3Int enemyTileClicked;
@@ -28,33 +26,6 @@ public class GameController : MonoBehaviour
 
     private void Update() //TODO buffer the next state transition in a var?
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit raycastHit;
-        //TODO refactor to maybe use one raycast? inverse layermask with unwalkable?
-        if (Physics.Raycast(ray, out raycastHit, float.MaxValue, enemyMask))
-        {
-            //TODO get tile location from enemy
-            Vector3Int tileLocation = GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = tileLocation;
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                enemyTileClicked = tileLocation;
-                //enemyClicked = raycastHit.collider.transform.root.GetComponent<Enemy>();
-                gameState.currentState = GameStates.States.EnemyClicked;
-            }
-        }
-        else if (Physics.Raycast(ray, out raycastHit, float.MaxValue, groundMask))
-        {
-            Vector3Int tileLocation = GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = tileLocation;
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                tileClicked = tileLocation;
-                gameState.currentState = GameStates.States.TileClicked;
-            }
-        }
     }
 
     public void OnGameTick()
@@ -63,6 +34,8 @@ public class GameController : MonoBehaviour
         
         //movement.OnGameTick();
         NpcController.Instance.OnGameTick();
+        gameState.currentState = GameStates.States.Idle; //TODO for now
+        player.OnGameTick();
 
         switch (gameState.currentState)
         {
@@ -103,14 +76,6 @@ public class GameController : MonoBehaviour
         //lastTile = playerVariables.currentTile;
         gameState.currentState = nextGameState;
         
-    }
-
-    private Vector3Int GetTileLocation(Vector3 worldLocation)
-    {
-        return new Vector3Int(
-            Mathf.RoundToInt(worldLocation.x),
-            Mathf.RoundToInt(0),
-            Mathf.RoundToInt(worldLocation.z));
     }
 
     private GameStates.States HandleGenericTileClick(Vector3Int tile, GameStates.States notAtTile, GameStates.States atTile)

@@ -5,9 +5,11 @@ using UnityEngine;
 //TODO does it need to be abstract? for simple npc like man, cow prob not right?
 public abstract class Npc : MonoBehaviour
 {
-    public NpcStates npcStates;
+    //TODO kind of scuffed with having to instatiate... is it worth?
+    public NpcStates defaultNpcStates;
+    [HideInInspector] public NpcStates npcStates;
     public NpcInfo defaultNpcInfo;
-    public NpcInfo npcInfo;
+    [HideInInspector] public NpcInfo npcInfo;
 
     public Vector3Int spawnTile;
     public Vector3Int currentTile;
@@ -17,6 +19,8 @@ public abstract class Npc : MonoBehaviour
     private void Awake()
     {
         npcInfo = Instantiate(defaultNpcInfo);
+        npcStates = Instantiate(defaultNpcStates);
+
         spawnTile = Utils.GetTileLocation(transform.position);
         currentTile = spawnTile;
     }
@@ -34,10 +38,14 @@ public abstract class Npc : MonoBehaviour
     {
         //regen stats, hp here?
 
-        //this can then affect our state?
+        //these can affect the nextState
         movement.OnGameTick();
+        //do attack stuff here, which can override the state set by movement
 
-        switch (npcStates.nextState)
+        //then update the current state?
+        npcStates.currentState = npcStates.nextState;
+
+        switch (npcStates.currentState)
         {
             case NpcStates.States.Idle:
                 break;
@@ -56,8 +64,6 @@ public abstract class Npc : MonoBehaviour
             default:
                 break;
         }
-
-        npcStates.currentState = npcStates.nextState;
     }
 
     private bool IsInRange(Vector3Int target)

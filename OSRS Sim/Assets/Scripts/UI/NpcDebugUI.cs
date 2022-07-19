@@ -17,7 +17,7 @@ public class NpcDebugUI : MonoBehaviour
     private void Awake()
     {
         npc = GetComponent<Npc>();
-        offset = GetComponent<MeshRenderer>().bounds.size.y;
+        offset = GetComponent<MeshRenderer>().bounds.size.y / 2;
     }
 
     private void Start()

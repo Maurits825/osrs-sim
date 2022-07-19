@@ -11,16 +11,21 @@ public class PlayerMovement : MonoBehaviour, IMovement
     private PathFinder pathFinder;
     private RunEnergy runEnergy;
 
-    private Vector3Int target;
+    private Vector3Int targetTile;
 
     private List<GameObject> currentPathTiles = new List<GameObject>();
     private GameObject playerTileMarker;
+
+    public void SetTargetTile(Vector3Int target)
+    {
+        targetTile = target;
+    }
 
     public void Move()
     {
         ClearCurrentPathTiles();
 
-        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, target);
+        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, targetTile);
 
         if (path.Count <= 1)
         {
