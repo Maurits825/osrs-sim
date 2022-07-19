@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameStates gameState;
     [SerializeField] private PlayerVariables playerVariables;
 
-    [SerializeField] private CombatController combatController;
+    //[SerializeField] private CombatController combatController;
 
     [SerializeField] private Npc player;
 
@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case GameStates.States.Attacking:
-                combatController.OnGameTick();
+                //combatController.OnGameTick();
                 break;
 
             default:

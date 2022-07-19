@@ -23,7 +23,7 @@ public class HealthBarUI : MonoBehaviour
         barImage = healthBar.transform.Find("health").GetComponent<Image>();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         healthBar.transform.position = cam.WorldToScreenPoint(transform.position + (offset * Vector3.up));
         SetHealth((float)npc.npcInfo.npcStats.health.current / npc.npcInfo.npcStats.health.initial);

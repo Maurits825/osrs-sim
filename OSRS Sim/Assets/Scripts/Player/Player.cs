@@ -8,6 +8,6 @@ public class Player : Npc
     //TODO inputcontroller class
     protected override void Start()
     {
-        movement = GetComponent<IMovement>();
+        
     }
 }

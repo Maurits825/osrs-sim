@@ -9,5 +9,10 @@ public class NpcStats : ScriptableObject
     public NpcStatsValue attack;
     public NpcStatsValue strength;
     public NpcStatsValue defence;
+
+    public void OnEnable()
+    {
+        health.current = health.initial; // TODO better way to do this, have to to for everything?
+    }
 }
 

@@ -15,6 +15,7 @@ public abstract class Npc : MonoBehaviour
     public Vector3Int currentTile;
 
     protected IMovement movement;
+    protected ICombat combat;
 
     private void Awake()
     {
@@ -23,15 +24,15 @@ public abstract class Npc : MonoBehaviour
 
         spawnTile = Utils.GetTileLocation(transform.position);
         currentTile = spawnTile;
+
+        movement = GetComponent<IMovement>();
+        combat = GetComponent<ICombat>();
     }
 
     protected virtual void Start()
     {
         Debug.Log("Register: " + npcInfo.npcName.ToString());
-        NpcController.Instance.RegisterNpc(this);
-
-        //TODO grab attack and movement interface here?
-        movement = GetComponent<IMovement>();
+        NpcController.Instance.RegisterNpc(this);        
     }
 
     public void OnGameTick()
@@ -40,7 +41,7 @@ public abstract class Npc : MonoBehaviour
 
         //these can affect the nextState
         movement.OnGameTick();
-        //do attack stuff here, which can override the state set by movement
+        combat.OnGameTick(); //can override the state set by movement, intended...
 
         //then update the current state?
         npcStates.currentState = npcStates.nextState;
@@ -59,6 +60,7 @@ public abstract class Npc : MonoBehaviour
                 break;
 
             case NpcStates.States.AttackingNpc:
+                combat.Attack();
                 break;
 
             default:
@@ -66,13 +68,13 @@ public abstract class Npc : MonoBehaviour
         }
     }
 
-    private bool IsInRange(Vector3Int target)
+    public bool IsInRange(Vector3Int target)
     {
         int x = target.x - currentTile.x;
         int y = target.z - currentTile.z;
         int range = Mathf.Max(x, y);
 
-        //TODO handle diff enemysizes, walking under?
+        //TODO handle diff enemysizes, walking under? also do some chekc here for melee i think?, cant be diagonal?
         return range <= npcInfo.attackRange;
     }
 }

@@ -405,6 +405,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 380644894}
+--- !u!114 &380644906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215317282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c089bb37216576147b3bd88158fb25fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &438963178
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +693,7 @@ GameObject:
   - component: {fileID: 864915714}
   - component: {fileID: 864915713}
   - component: {fileID: 864915712}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1218,7 +1230,7 @@ GameObject:
   - component: {fileID: 1268989998}
   - component: {fileID: 1268989997}
   - component: {fileID: 1268989996}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: eye (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1454,7 +1466,8 @@ GameObject:
   - component: {fileID: 1471785024}
   - component: {fileID: 1471785025}
   - component: {fileID: 1471785026}
-  m_Layer: 0
+  - component: {fileID: 1471785027}
+  m_Layer: 8
   m_Name: enemytest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1628,6 +1641,18 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 860873869847150198, guid: 982d4892c97077843865b00e310bebcc, type: 3}
   canvas: {fileID: 438963181}
   cam: {fileID: 963194227}
+--- !u!114 &1471785027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471785016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55814abdc9b2a454d90fdaac57dd47d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1590769919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,7 +1685,6 @@ MonoBehaviour:
   tileMarker: {fileID: 960376515}
   gameState: {fileID: 11400000, guid: 5342a67ed79d8d24b98fe6331ed0d947, type: 2}
   playerVariables: {fileID: 11400000, guid: bd4aaecc819e43c4c9f9690736a833a7, type: 2}
-  combatController: {fileID: 0}
   player: {fileID: 380644897}
 --- !u!4 &1590769921
 Transform:

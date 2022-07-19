@@ -13,11 +13,13 @@ public class InputController : MonoBehaviour
     [SerializeField] private GameObject tileMarker;
 
     private IMovement movement;
+    private ICombat combat;
     private Npc npc;
 
     private void Start()
     {
         movement = GetComponent<IMovement>();
+        combat = GetComponent<ICombat>();
         npc = GetComponent<Npc>();
     }
 
@@ -35,8 +37,13 @@ public class InputController : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 //TODO enemy target with cmb controller?
-                //enemyTileClicked = tileLocation;
-                //enemyClicked = raycastHit.collider.transform.root.GetComponent<Enemy>();
+                Npc npcClicked = raycastHit.collider.transform.root.GetComponent<Npc>();
+                ICombat combatNpcClicked = raycastHit.collider.transform.root.GetComponent<ICombat>();
+
+                combat.SetNpcTarget(npcClicked);
+                movement.SetTargetTile(npcClicked.currentTile);
+                combatNpcClicked.SetNpcTarget(npc); //TODO set ourselves as target, is this the place to do it?
+
                 npc.npcStates.nextState = NpcStates.States.MovingToNpc;
             }
         }

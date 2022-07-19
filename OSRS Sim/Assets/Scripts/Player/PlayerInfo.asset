@@ -18,5 +18,5 @@ MonoBehaviour:
   moveSpeed: 0
   isAggresive: 0
   attackRange: 0
-  maxHit: 0
+  maxHit: 5
   attackSpeed: 0
