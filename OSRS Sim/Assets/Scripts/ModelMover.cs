@@ -6,10 +6,10 @@ public class ModelMover : MonoBehaviour
 {
     [SerializeField] private Transform model;
     private Npc npc;
-    private Queue<Vector3Int> nextTiles = new();
-    private Queue<Vector3> nextDirections = new();
+    private Queue<Vector2Int> nextTiles = new();
+    private Queue<Vector2> nextDirections = new();
     private Queue<int> tilesMoved = new();
-    private Vector3Int previousTile;
+    private Vector2Int previousTile;
 
     private const float modelRotationSpeed = 250;
     private float modelMoveSpeed;
@@ -26,7 +26,7 @@ public class ModelMover : MonoBehaviour
             nextDirections.Enqueue(npc.currentTile - previousTile);
 
             int x = Mathf.Abs(npc.currentTile.x - previousTile.x);
-            int y = Mathf.Abs(npc.currentTile.z - previousTile.z);
+            int y = Mathf.Abs(npc.currentTile.y - previousTile.y);
             int tiles = Mathf.Max(x, y);
 
             tilesMoved.Enqueue(tiles);
@@ -56,9 +56,9 @@ public class ModelMover : MonoBehaviour
     {
         if (nextTiles.Count > 0)
         {
-            Vector3Int currentTile = nextTiles.Peek();
+            Vector2Int currentTile = nextTiles.Peek();
             int tiles = tilesMoved.Peek();
-            if (Vector2.Distance(new Vector2(model.position.x, model.position.z), new Vector2(currentTile.x, currentTile.z)) <= modelDistanceThreshold)
+            if (Vector2.Distance(new Vector2(model.position.x, model.position.z), currentTile) <= modelDistanceThreshold)
             {
                 nextTiles.Dequeue();
                 tilesMoved.Dequeue();
@@ -74,15 +74,14 @@ public class ModelMover : MonoBehaviour
             }
 
             modelMoveSpeed = modelMoveSpeedWalk * tiles;
-            Vector3 position = Vector3.MoveTowards(model.position, new Vector3(currentTile.x, model.position.y, currentTile.z), modelMoveSpeed * Time.deltaTime);
+            Vector3 position = Vector3.MoveTowards(model.position, new Vector3(currentTile.x, model.position.y, currentTile.y), modelMoveSpeed * Time.deltaTime);
             model.position = position;
         }
 
         if (nextDirections.Count > 0)
         {
-            Vector3 currentDirection = nextDirections.Peek();
-            float angleDiff = Vector3.Angle(model.forward, currentDirection);
-            if (Vector3.Angle(model.forward, currentDirection) <= modelAngleThreshold)
+            Vector2 currentDirection = nextDirections.Peek();
+            if (Vector3.Angle(model.forward, new Vector3(currentDirection.x, 0, currentDirection.y)) <= modelAngleThreshold)
             {
                 nextDirections.Dequeue();
                 if (nextDirections.Count > 0)
@@ -95,7 +94,7 @@ public class ModelMover : MonoBehaviour
                 }
             }
 
-            float angle = Mathf.Atan2(currentDirection.x, currentDirection.z) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(currentDirection.x, currentDirection.y) * Mathf.Rad2Deg;
             Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
             model.transform.rotation = Quaternion.RotateTowards(model.rotation, q, Time.deltaTime * modelRotationSpeed);
         }

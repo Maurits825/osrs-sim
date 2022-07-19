@@ -4,11 +4,15 @@ using UnityEngine;
 
 public static class Utils
 {
-    public static Vector3Int GetTileLocation(Vector3 worldLocation)
+    public static Vector2Int GetTileLocation(Vector3 worldLocation)
     {
-        return new Vector3Int(
+        return new Vector2Int(
             Mathf.RoundToInt(worldLocation.x),
-            Mathf.RoundToInt(0),
             Mathf.RoundToInt(worldLocation.z));
+    }
+
+    public static Vector3 GetWorldLocation(Vector2Int tile)
+    {
+        return new Vector3(tile.x, 0, tile.y);
     }
 }

@@ -9,10 +9,10 @@ public abstract class Npc : MonoBehaviour
     public NpcStates defaultNpcStates;
     [HideInInspector] public NpcStates npcStates;
     public NpcInfo defaultNpcInfo;
-    [HideInInspector] public NpcInfo npcInfo;
+    public NpcInfo npcInfo;
 
-    public Vector3Int spawnTile;
-    public Vector3Int currentTile;
+    public Vector2Int spawnTile;
+    public Vector2Int currentTile;
 
     protected IMovement movement;
     protected ICombat combat;
@@ -68,13 +68,57 @@ public abstract class Npc : MonoBehaviour
         }
     }
 
-    public bool IsInRange(Vector3Int target)
+    public bool IsInRange(Vector2Int target)
     {
-        int x = target.x - currentTile.x;
-        int y = target.z - currentTile.z;
-        int range = Mathf.Max(x, y);
+        if (npcInfo.attackRange == 1)
+        {
+            return isInMeleeRange(target);
+        }
+        else
+        {
+            int x = target.x - currentTile.x;
+            int y = target.y - currentTile.y;
+            int range = Mathf.Max(x, y);
 
-        //TODO handle diff enemysizes, walking under? also do some chekc here for melee i think?, cant be diagonal?
-        return range <= npcInfo.attackRange;
+            //TODO handle diff enemysizes, walking under? also do some chekc here for melee i think?, cant be diagonal?
+            return range <= npcInfo.attackRange;
+        }
+    }
+
+    public bool isInMeleeRange(Vector2Int target)
+    {
+        List<Vector2Int> tiles = getMeleeTiles();
+        return true;
+    }
+
+    public List<Vector2Int> getMeleeTiles()
+    {
+        List<Vector2Int> tiles = new();
+
+        for (int x = 0; x < npcInfo.size.x; x++)
+        {
+            int y = -1;
+            tiles.Add(new Vector2Int(currentTile.x + x, currentTile.y + y));
+        }
+
+        for (int x = 0; x < npcInfo.size.x; x++)
+        {
+            int y = npcInfo.size.y;
+            tiles.Add(new Vector2Int(currentTile.x + x, currentTile.y + y));
+        }
+
+        for (int y = 0; y < npcInfo.size.y; y++)
+        {
+            int x = -1;
+            tiles.Add(new Vector2Int(currentTile.x + x, currentTile.y + y));
+        }
+
+        for (int y = 0; y < npcInfo.size.y; y++)
+        {
+            int x = npcInfo.size.x;
+            tiles.Add(new Vector2Int(currentTile.x + x, currentTile.y + y));
+        }
+
+        return tiles;
     }
 }

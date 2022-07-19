@@ -14,9 +14,9 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private Npc player;
 
-    private Vector3Int tileClicked;
-    private Vector3Int enemyTileClicked;
-    private Vector3Int lastTile;
+    private Vector2Int tileClicked;
+    private Vector2Int enemyTileClicked;
+    private Vector2Int lastTile;
 
     private Npc npc;
 
@@ -78,7 +78,7 @@ public class GameController : MonoBehaviour
         
     }
 
-    private GameStates.States HandleGenericTileClick(Vector3Int tile, GameStates.States notAtTile, GameStates.States atTile)
+    private GameStates.States HandleGenericTileClick(Vector2Int tile, GameStates.States notAtTile, GameStates.States atTile)
     {
         if (tile != npc.currentTile)
         {
@@ -92,7 +92,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private bool HandleGenericMoving(Vector3Int tile)
+    private bool HandleGenericMoving(Vector2Int tile)
     {
         //Vector3Int nextTile = movement.ProcessMovement(tile);
         if (lastTile == npc.currentTile)

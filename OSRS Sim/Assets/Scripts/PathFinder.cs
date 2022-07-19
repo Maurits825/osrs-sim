@@ -19,14 +19,14 @@ public class PathFinder
 
     }
 
-    public List<Vector3Int> FindPath(Vector3Int player, Vector3Int target)
+    public List<Vector2Int> FindPath(Vector2Int player, Vector2Int target)
     {
         grid = CreateGrid();
 
         int startX = player.x + GRID_RADIUS;
-        int startY = player.z + GRID_RADIUS;
+        int startY = player.y + GRID_RADIUS;
         int targetX = target.x + GRID_RADIUS;
-        int targetY = target.z + GRID_RADIUS;
+        int targetY = target.y + GRID_RADIUS;
 
         PathNode startNode = grid[startX, startY];
         PathNode endNode = grid[targetX, targetY];
@@ -168,14 +168,14 @@ public class PathFinder
         return grid;
     }
 
-    private List<Vector3Int> ConvertPathToWorld(List<PathNode> path, Vector3Int player)
+    private List<Vector2Int> ConvertPathToWorld(List<PathNode> path, Vector2Int player)
     {
-        List<Vector3Int> worldPath = new List<Vector3Int>();
+        List<Vector2Int> worldPath = new List<Vector2Int>();
         for (int i = 0; i < path.Count; i++)
         {
             int x = path[i].x - GRID_RADIUS;
-            int z = path[i].y - GRID_RADIUS;
-            worldPath.Add(new Vector3Int(x, 0, z));
+            int y = path[i].y - GRID_RADIUS;
+            worldPath.Add(new Vector2Int(x, y));
         }
         return worldPath;
     }

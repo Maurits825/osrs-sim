@@ -16,5 +16,7 @@ public class NpcInfo : ScriptableObject
     public int maxHit; //todo diff max hits with diff styles...
 
     public int attackSpeed;
+
+    public Vector2Int size;
 }
 

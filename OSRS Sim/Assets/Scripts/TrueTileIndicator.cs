@@ -17,12 +17,12 @@ public class TrueTileIndicator : MonoBehaviour
     private void Start()
     {
         tileMarker = Instantiate(tileMarkerModel, transform);
-        tileMarker.transform.position = npc.currentTile;
+        tileMarker.transform.position = Utils.GetWorldLocation(npc.currentTile);
     }
 
     private void LateUpdate()
     {
-        tileMarker.transform.position = npc.currentTile;
+        tileMarker.transform.position = Utils.GetWorldLocation(npc.currentTile);
         tileMarker.transform.rotation = Quaternion.identity;
     }
 }

@@ -6,13 +6,13 @@ public class NpcMovement : MonoBehaviour, IMovement
 {
     private Npc npc;
 
-    private Vector3Int target;
+    private Vector2Int target;
     private int roamRange = 5;// TODO put in npcInfo?
     private PathFinder pathFinder;
 
     public void Move()
     {
-        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, target); //TODO npc path finder
+        List<Vector2Int> path = pathFinder.FindPath(npc.currentTile, target); //TODO npc path finder
         if (path.Count <= 1)
         {
             if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
@@ -58,10 +58,9 @@ public class NpcMovement : MonoBehaviour, IMovement
         {
             int randX = Random.Range(-roamRange, roamRange);
             int randY = Random.Range(-roamRange, roamRange);
-            target = new Vector3Int(
+            target = new Vector2Int(
                 npc.spawnTile.x + randX,
-                0,
-                npc.spawnTile.z + randY);
+                npc.spawnTile.y + randY);
 
             return NpcStates.States.Moving;
         }
@@ -71,7 +70,7 @@ public class NpcMovement : MonoBehaviour, IMovement
         }
     }
 
-    public void SetTargetTile(Vector3Int target)
+    public void SetTargetTile(Vector2Int target)
     {
         this.target = target;
     }

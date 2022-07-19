@@ -30,13 +30,11 @@ public class InputController : MonoBehaviour
         //TODO refactor to maybe use one raycast? inverse layermask with unwalkable?
         if (Physics.Raycast(ray, out raycastHit, float.MaxValue, enemyMask))
         {
-            //TODO get tile location from enemy
-            Vector3Int tileLocation = Utils.GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = tileLocation;
+            Vector2Int tileLocation = Utils.GetTileLocation(raycastHit.point);
+            tileMarker.transform.position = Utils.GetWorldLocation(tileLocation);
 
             if (Input.GetMouseButtonDown(0))
             {
-                //TODO enemy target with cmb controller?
                 Npc npcClicked = raycastHit.collider.transform.root.GetComponent<Npc>();
                 ICombat combatNpcClicked = raycastHit.collider.transform.root.GetComponent<ICombat>();
 
@@ -49,8 +47,8 @@ public class InputController : MonoBehaviour
         }
         else if (Physics.Raycast(ray, out raycastHit, float.MaxValue, groundMask))
         {
-            Vector3Int tileLocation = Utils.GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = tileLocation;
+            Vector2Int tileLocation = Utils.GetTileLocation(raycastHit.point);
+            tileMarker.transform.position = Utils.GetWorldLocation(tileLocation); //TODO repeated
 
             if (Input.GetMouseButtonDown(0))
             {

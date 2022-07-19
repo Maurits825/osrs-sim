@@ -11,12 +11,12 @@ public class PlayerMovement : MonoBehaviour, IMovement
     private PathFinder pathFinder;
     private RunEnergy runEnergy;
 
-    private Vector3Int targetTile;
+    private Vector2Int targetTile;
 
     private List<GameObject> currentPathTiles = new List<GameObject>();
     private GameObject playerTileMarker;
 
-    public void SetTargetTile(Vector3Int target)
+    public void SetTargetTile(Vector2Int target)
     {
         targetTile = target;
     }
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour, IMovement
     {
         ClearCurrentPathTiles();
 
-        List<Vector3Int> path = pathFinder.FindPath(npc.currentTile, targetTile);
+        List<Vector2Int> path = pathFinder.FindPath(npc.currentTile, targetTile);
 
         if (path.Count <= 1)
         {
@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour, IMovement
         if (Settings.s.drawPlayerTile)
         {
             playerTileMarker.SetActive(true);
-            playerTileMarker.transform.position = npc.currentTile;
+            playerTileMarker.transform.position = Utils.GetWorldLocation(npc.currentTile);
         }
         else
         {
@@ -94,7 +94,7 @@ public class PlayerMovement : MonoBehaviour, IMovement
         playerTileMarker = tileMarkerPool.GetPooledObject();
     }
 
-    private void DrawPath(List<Vector3Int> path)
+    private void DrawPath(List<Vector2Int> path)
     {
         int startIndex = 1;
         foreach (Vector3Int tile in path.GetRange(startIndex, path.Count - startIndex))
