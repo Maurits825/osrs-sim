@@ -27,20 +27,6 @@ public class PlayerMovement : MonoBehaviour, IMovement
 
         List<Vector2Int> path = pathFinder.FindPath(npc.currentTile, targetTile);
 
-        if (path.Count <= 1)
-        {
-            if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
-            {
-                npc.npcStates.nextState = NpcStates.States.AttackingNpc;
-            }
-            else
-            {
-                npc.npcStates.nextState = NpcStates.States.Idle;
-            }
-
-            return;
-        }
-
         int tileIndex = 1;
         //TODO figure run energy drain maths
         float runEnergyDrain = 0;
@@ -80,6 +66,24 @@ public class PlayerMovement : MonoBehaviour, IMovement
     public void OnGameTick()
     {
         runEnergy.RegenRun();
+
+        switch (npc.npcStates.currentState)
+        {
+            case NpcStates.States.Moving:
+            case NpcStates.States.MovingToNpc:
+                if (npc.currentTile == targetTile)
+                {
+                    if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
+                    {
+                        npc.npcStates.nextState = NpcStates.States.AttackingNpc;
+                    }
+                    else
+                    {
+                        npc.npcStates.nextState = NpcStates.States.Idle;
+                    }
+                }
+                break;
+        }
     }
 
     private void Start()
