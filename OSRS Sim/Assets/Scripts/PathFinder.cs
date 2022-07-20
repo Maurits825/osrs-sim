@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //TODO check optimization at some point, using hash sets
+//also creating the grid every time, have a look when it becomes a problem
 public class PathFinder
 {
     private const int MOVE_STRAIGHT_COST = 10;
@@ -14,9 +15,28 @@ public class PathFinder
 
     private static readonly int GRID_RADIUS = 100;
     private static readonly int GRID_SIZE = (GRID_RADIUS * 2) + 1;
-    public PathFinder()
-    {
 
+    public Vector2Int FindClosestWalkableTile(Vector2Int tile)
+    {
+        grid = CreateGrid();
+
+        PathNode node = grid[tile.x + GRID_RADIUS, tile.y + GRID_RADIUS];
+
+        if (node.isWalkable)
+        {
+            return tile;
+        }
+
+        PathNode closestEndNode = FindClosestWalkableNode(node);
+        if (closestEndNode != null)
+        {
+            return new Vector2Int(closestEndNode.x - GRID_RADIUS, closestEndNode.y - GRID_RADIUS);
+        }
+        else
+        {
+            //TODO
+            return new Vector2Int(0, 0);
+        }
     }
 
     public List<Vector2Int> FindPath(Vector2Int player, Vector2Int target)

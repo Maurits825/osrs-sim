@@ -15,6 +15,3 @@ MonoBehaviour:
   runEnergy: 100
   maxRunEnergy: 100
   isRunning: 1
-  maxHealth: 100
-  health: 100
-  currentTile: {x: 0, y: 0, z: 0}

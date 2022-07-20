@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour, ICombat
 {
     private Npc npc;
-    private Npc targetNpc;
+    private Npc npcTarget;
     private ICombat targetCombat;
 
     private void Start()
@@ -21,7 +21,16 @@ public class PlayerCombat : MonoBehaviour, ICombat
 
     public void OnGameTick()
     {
-        
+        if (npc.npcStates.currentState == NpcStates.States.MovingToNpc && npcTarget.IsInRange(npc.currentTile, npc.npcInfo.attackRange))
+        {
+            npc.npcStates.currentState = NpcStates.States.AttackingNpc;
+        }
+
+        if (npc.npcStates.currentState == NpcStates.States.AttackingNpc)
+        {
+
+        }
+
     }
 
     public void ReceiveDamage(int amount)
@@ -32,7 +41,7 @@ public class PlayerCombat : MonoBehaviour, ICombat
 
     public void SetNpcTarget(Npc npc)
     {
-        targetNpc = npc;
+        npcTarget = npc;
         targetCombat = npc.GetComponent<ICombat>();
     }
 }

@@ -39,59 +39,68 @@ public abstract class Npc : MonoBehaviour
     {
         //regen stats, hp here?
 
+        npcStates.currentState = npcStates.nextState;
+
         //these can affect the nextState
         movement.OnGameTick();
+        npcStates.currentState = npcStates.nextState; // update states from movement
         combat.OnGameTick(); //can override the state set by movement, intended...
 
         //then update the current state?
-        npcStates.currentState = npcStates.nextState;
+        
 
-        switch (npcStates.currentState)
-        {
-            case NpcStates.States.Idle:
-                break;
-
-            case NpcStates.States.Moving:
-                movement.Move(); //do we care about target here or where?
-                break;
-
-            case NpcStates.States.MovingToNpc:
-                movement.Move(); //TODO test this?
-                break;
-
-            case NpcStates.States.AttackingNpc:
-                combat.Attack();
-                break;
-
-            default:
-                break;
-        }
+        //TODO we could just not have this switch here and let movement and combat to there things
+        //would allow move att same tick i think also?
+        //onyl problem is that there could be an "invalid" move and att in same tick?
+        //also makes the Move() fn in interface kinda useless...?
     }
 
-    public bool IsInRange(Vector2Int target)
+    public bool IsInRange(Vector2Int tile, int attackRange)
     {
-        if (npcInfo.attackRange == 1)
+        if (attackRange == 0)
         {
-            return isInMeleeRange(target);
+            return isInMeleeRange(tile);
         }
         else
         {
-            int x = target.x - currentTile.x;
-            int y = target.y - currentTile.y;
-            int range = Mathf.Max(x, y);
+            //we have to calc from the closes adj tile
+            //easy way: just calc all distances and return if any is below
+            List<Vector2Int> tiles = GetAllAdjacentTiles();
+            foreach (Vector2Int adjTile in tiles)
+            {
+                int distance = Utils.GetChebyshevDistance(adjTile, tile);
+                if (distance <= attackRange)
+                {
+                    return true;
+                }
+            }
 
-            //TODO handle diff enemysizes, walking under? also do some chekc here for melee i think?, cant be diagonal?
-            return range <= npcInfo.attackRange;
+            //TODO handle walking under?
+            return false;
         }
     }
 
-    public bool isInMeleeRange(Vector2Int target)
+    public Vector2Int GetClosestAdjacentTile(Vector2Int tile)
     {
-        List<Vector2Int> tiles = getMeleeTiles();
-        return true;
+        List<Vector2Int> tiles = GetAllAdjacentTiles();
+
+        int minDistance = int.MaxValue;
+        Vector2Int closestTile = tiles[0];
+
+        foreach (Vector2Int adjTile in tiles)
+        {
+            int distance = Utils.GetChebyshevDistance(adjTile, tile);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestTile = adjTile;
+            }
+        }
+
+        return closestTile;
     }
 
-    public List<Vector2Int> getMeleeTiles()
+    public List<Vector2Int> GetMeleeTiles()
     {
         List<Vector2Int> tiles = new();
 
@@ -120,5 +129,23 @@ public abstract class Npc : MonoBehaviour
         }
 
         return tiles;
+    }
+
+    private List<Vector2Int> GetAllAdjacentTiles()
+    {
+        List<Vector2Int> tiles = GetMeleeTiles();
+
+        tiles.Add(new Vector2Int(currentTile.x - 1, currentTile.y - 1));
+        tiles.Add(new Vector2Int(currentTile.x - 1, currentTile.y + npcInfo.size.y));
+        tiles.Add(new Vector2Int(currentTile.x + npcInfo.size.x, currentTile.y - 1));
+        tiles.Add(new Vector2Int(currentTile.x + npcInfo.size.x, currentTile.y + npcInfo.size.y));
+
+        return tiles;
+    }
+
+    private bool isInMeleeRange(Vector2Int tile)
+    {
+        List<Vector2Int> tiles = GetMeleeTiles();
+        return tiles.Contains(tile);
     }
 }

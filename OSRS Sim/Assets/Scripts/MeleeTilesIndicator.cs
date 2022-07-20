@@ -17,7 +17,7 @@ public class MeleeTilesIndicator : MonoBehaviour
 
     private void Start()
     {
-        List<Vector2Int> tiles = npc.getMeleeTiles();
+        List<Vector2Int> tiles = npc.GetMeleeTiles();
 
         foreach (Vector2Int tile in tiles)
         {
@@ -27,7 +27,7 @@ public class MeleeTilesIndicator : MonoBehaviour
 
     private void LateUpdate()
     {
-        List<Vector2Int> tiles = npc.getMeleeTiles();
+        List<Vector2Int> tiles = npc.GetMeleeTiles();
 
         for (int i = 0; i < tiles.Count; i++)
         {

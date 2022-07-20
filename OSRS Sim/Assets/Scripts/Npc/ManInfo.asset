@@ -20,4 +20,4 @@ MonoBehaviour:
   attackRange: 1
   maxHit: 1
   attackSpeed: 4
-  size: {x: 4, y: 4}
+  size: {x: 3, y: 3}

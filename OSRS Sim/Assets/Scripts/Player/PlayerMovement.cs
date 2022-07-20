@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour, IMovement
     [SerializeField] private PlayerVariables playerVariables;
 
     private Npc npc;
+    private Npc npcTarget;
     private PathFinder pathFinder;
     private RunEnergy runEnergy;
 
@@ -18,7 +19,12 @@ public class PlayerMovement : MonoBehaviour, IMovement
 
     public void SetTargetTile(Vector2Int target)
     {
-        targetTile = target;
+        targetTile = pathFinder.FindClosestWalkableTile(target);
+    }
+
+    public Vector2Int GetTargetTile()
+    {
+        return targetTile;
     }
 
     public void Move()
@@ -26,6 +32,11 @@ public class PlayerMovement : MonoBehaviour, IMovement
         ClearCurrentPathTiles();
 
         List<Vector2Int> path = pathFinder.FindPath(npc.currentTile, targetTile);
+
+        if (path.Count <= 1)
+        {
+            return;
+        }
 
         int tileIndex = 1;
         //TODO figure run energy drain maths
@@ -70,20 +81,43 @@ public class PlayerMovement : MonoBehaviour, IMovement
         switch (npc.npcStates.currentState)
         {
             case NpcStates.States.Moving:
-            case NpcStates.States.MovingToNpc:
+                Move();
                 if (npc.currentTile == targetTile)
                 {
-                    if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
+                    npc.npcStates.nextState = NpcStates.States.Idle;
+                }
+                else
+                {
+                    npc.npcStates.nextState = NpcStates.States.Moving;
+                }
+                break;
+
+            case NpcStates.States.MovingToNpc:
+                if (npcTarget.IsInRange(npc.currentTile, npc.npcInfo.attackRange))
+                {
+                    npc.npcStates.nextState = NpcStates.States.AttackingNpc;
+                }
+                else
+                {
+                    targetTile = npcTarget.GetClosestAdjacentTile(npc.currentTile);
+                    Move();
+
+                    if (npcTarget.IsInRange(npc.currentTile, npc.npcInfo.attackRange))
                     {
                         npc.npcStates.nextState = NpcStates.States.AttackingNpc;
                     }
                     else
                     {
-                        npc.npcStates.nextState = NpcStates.States.Idle;
+                        npc.npcStates.nextState = NpcStates.States.MovingToNpc;
                     }
                 }
                 break;
         }
+    }
+
+    public void SetTargetNpc(Npc target)
+    {
+        npcTarget = target;
     }
 
     private void Start()

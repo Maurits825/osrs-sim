@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     //[SerializeField] private CombatController combatController;
 
     [SerializeField] private Npc player;
+    [SerializeField] private InputController inputController;
 
     private Vector2Int tileClicked;
     private Vector2Int enemyTileClicked;
@@ -31,10 +32,11 @@ public class GameController : MonoBehaviour
     public void OnGameTick()
     {
         GameStates.States nextGameState = gameState.currentState;
-        
-        //movement.OnGameTick();
-        NpcController.Instance.OnGameTick();
         gameState.currentState = GameStates.States.Idle; //TODO for now
+
+        //movement.OnGameTick();
+        inputController.OnGameTick();
+        NpcController.Instance.OnGameTick();
         player.OnGameTick();
 
         switch (gameState.currentState)

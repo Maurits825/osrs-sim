@@ -2,19 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputController : MonoBehaviour
+public class InputController : MonoBehaviour, IGameTick
 {
     [SerializeField] private Camera mainCamera;
 
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask enemyMask;
 
-    // TODO refactor to movement maybe? or maybe thing about how to handle "plugins"
-    [SerializeField] private GameObject tileMarker;
-
     private IMovement movement;
     private ICombat combat;
     private Npc npc;
+
+    private Npc npcClicked;
+    private ICombat combatNpcClicked;
+    private Vector2Int tileClicked;
+    private NpcStates.States nextState;
+
+    private bool isInput = false;
+
+    public void OnGameTick()
+    {
+        if (isInput)
+        {
+            switch (nextState)
+            {
+                case NpcStates.States.Moving:
+                    //TODO if click unwalkable, still moving for one tick
+                    if (tileClicked == npc.currentTile)
+                    {
+                        npc.npcStates.nextState = NpcStates.States.Idle;
+                    }
+                    else
+                    {
+                        movement.SetTargetTile(tileClicked);
+                        npc.npcStates.nextState = nextState;
+                    }
+                    break;
+
+                case NpcStates.States.MovingToNpc:
+                    combat.SetNpcTarget(npcClicked);
+                    movement.SetTargetNpc(npcClicked);
+                    //combatNpcClicked.SetNpcTarget(npc); //TODO set ourselves as target, is this the place to do it?
+                    npc.npcStates.nextState = nextState;
+                    break;
+            }
+
+            isInput = false;
+        }
+    }
 
     private void Start()
     {
@@ -23,37 +58,31 @@ public class InputController : MonoBehaviour
         npc = GetComponent<Npc>();
     }
 
-    private void Update() //TODO buffer the next state transition in a var?
+    private void Update()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit raycastHit;
+
         //TODO refactor to maybe use one raycast? inverse layermask with unwalkable?
         if (Physics.Raycast(ray, out raycastHit, float.MaxValue, enemyMask))
         {
-            Vector2Int tileLocation = Utils.GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = Utils.GetWorldLocation(tileLocation);
-
             if (Input.GetMouseButtonDown(0))
             {
-                Npc npcClicked = raycastHit.collider.transform.root.GetComponent<Npc>();
-                ICombat combatNpcClicked = raycastHit.collider.transform.root.GetComponent<ICombat>();
+                npcClicked = raycastHit.collider.transform.root.GetComponent<Npc>();
+                combatNpcClicked = raycastHit.collider.transform.root.GetComponent<ICombat>();
 
-                combat.SetNpcTarget(npcClicked);
-                movement.SetTargetTile(npcClicked.currentTile);
-                combatNpcClicked.SetNpcTarget(npc); //TODO set ourselves as target, is this the place to do it?
-
-                npc.npcStates.nextState = NpcStates.States.MovingToNpc;
+                nextState = NpcStates.States.MovingToNpc;
+                isInput = true;
             }
         }
         else if (Physics.Raycast(ray, out raycastHit, float.MaxValue, groundMask))
         {
-            Vector2Int tileLocation = Utils.GetTileLocation(raycastHit.point);
-            tileMarker.transform.position = Utils.GetWorldLocation(tileLocation); //TODO repeated
-
             if (Input.GetMouseButtonDown(0))
             {
-                movement.SetTargetTile(tileLocation);
-                npc.npcStates.nextState = NpcStates.States.Moving;
+                tileClicked = Utils.GetTileLocation(raycastHit.point);
+
+                nextState = NpcStates.States.Moving;
+                isInput = true;
             }
         }
     }

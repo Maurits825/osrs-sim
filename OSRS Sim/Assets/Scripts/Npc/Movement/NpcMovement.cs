@@ -7,6 +7,8 @@ public class NpcMovement : MonoBehaviour, IMovement
     private Npc npc;
 
     private Vector2Int targetTile;
+    private Npc npcTarget;
+
     private int roamRange = 5;// TODO put in npcInfo?
     private PathFinder pathFinder;
 
@@ -33,20 +35,43 @@ public class NpcMovement : MonoBehaviour, IMovement
                 break;
 
             case NpcStates.States.Moving:
-            case NpcStates.States.MovingToNpc:
+                Move();
                 if (npc.currentTile == targetTile)
                 {
-                    if (npc.npcStates.currentState == NpcStates.States.MovingToNpc)
+                    npc.npcStates.nextState = NpcStates.States.Idle;
+                }
+                else
+                {
+                    npc.npcStates.nextState = NpcStates.States.Moving;
+                }
+                break;
+
+            case NpcStates.States.MovingToNpc: //TODO copy pasted from playermovement
+                if (npcTarget.IsInRange(npc.currentTile, npc.npcInfo.attackRange))
+                {
+                    npc.npcStates.nextState = NpcStates.States.AttackingNpc;
+                }
+                else
+                {
+                    targetTile = npcTarget.GetClosestAdjacentTile(npc.currentTile);
+                    Move();
+
+                    if (npcTarget.IsInRange(npc.currentTile, npc.npcInfo.attackRange))
                     {
                         npc.npcStates.nextState = NpcStates.States.AttackingNpc;
                     }
                     else
                     {
-                        npc.npcStates.nextState = NpcStates.States.Idle;
+                        npc.npcStates.nextState = NpcStates.States.MovingToNpc;
                     }
                 }
                 break;
         }
+    }
+
+    public void SetTargetNpc(Npc target)
+    {
+        npcTarget = target;
     }
 
     private void Start()
@@ -55,7 +80,7 @@ public class NpcMovement : MonoBehaviour, IMovement
         pathFinder = new PathFinder();
     }
 
-    private NpcStates.States Roam()
+    private NpcStates.States Roam() //TODO if target tile is unwalkable, it will forever be in moving state?
     {
         if (Random.Range(0, 11) < 3)
         {
@@ -75,6 +100,11 @@ public class NpcMovement : MonoBehaviour, IMovement
 
     public void SetTargetTile(Vector2Int target)
     {
-        this.targetTile = target;
+        targetTile = target;
+    }
+
+    public Vector2Int GetTargetTile()
+    {
+        return targetTile;
     }
 }

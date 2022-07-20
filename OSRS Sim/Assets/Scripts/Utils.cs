@@ -15,4 +15,11 @@ public static class Utils
     {
         return new Vector3(tile.x, 0, tile.y);
     }
+
+    public static int GetChebyshevDistance(Vector2Int startTile, Vector2Int targetTile)
+    {
+        int x = Mathf.Abs(targetTile.x - startTile.x);
+        int y = Mathf.Abs(targetTile.y - startTile.y);
+        return Mathf.Max(x, y);
+    }
 }
