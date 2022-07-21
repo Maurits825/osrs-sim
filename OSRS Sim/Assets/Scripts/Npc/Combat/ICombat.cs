@@ -10,4 +10,5 @@ public interface ICombat : IGameTick
     public void ReceiveDamage(int amount);
 
     public void SetNpcTarget(Npc npc);
+    public Npc GetNpcTarget();
 }

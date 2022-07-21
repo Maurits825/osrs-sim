@@ -44,4 +44,9 @@ public class PlayerCombat : MonoBehaviour, ICombat
         npcTarget = npc;
         targetCombat = npc.GetComponent<ICombat>();
     }
+
+    public Npc GetNpcTarget()
+    {
+        return npcTarget;
+    }
 }

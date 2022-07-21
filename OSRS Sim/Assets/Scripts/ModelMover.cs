@@ -5,7 +5,10 @@ using UnityEngine;
 public class ModelMover : MonoBehaviour
 {
     [SerializeField] private Transform model;
+
     private Npc npc;
+    private ICombat combat;
+
     private Queue<Vector2Int> nextTiles = new();
     private Queue<Vector2> nextDirections = new();
     private Queue<int> tilesMoved = new();
@@ -33,11 +36,21 @@ public class ModelMover : MonoBehaviour
 
             previousTile = npc.currentTile;
         }
+
+        //TODO currently empty and requeue npc every tick, could be better
+        switch (npc.npcStates.currentState)
+        {
+            case NpcStates.States.MovingToNpc:
+            case NpcStates.States.AttackingNpc:
+                nextDirections.Clear();
+                break;
+        }
     }
 
     private void Awake()
     {
         npc = GetComponent<Npc>();
+        combat = GetComponent<ICombat>();
     }
 
     private void Start()
@@ -67,10 +80,6 @@ public class ModelMover : MonoBehaviour
                     currentTile = nextTiles.Peek();
                     tiles = tilesMoved.Peek();
                 }
-                else
-                {
-                    return;
-                }
             }
 
             modelMoveSpeed = modelMoveSpeedWalk * tiles;
@@ -88,15 +97,32 @@ public class ModelMover : MonoBehaviour
                 {
                     currentDirection = nextDirections.Peek();
                 }
-                else
-                {
-                    return;
-                }
             }
 
-            float angle = Mathf.Atan2(currentDirection.x, currentDirection.y) * Mathf.Rad2Deg;
-            Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
-            model.transform.rotation = Quaternion.RotateTowards(model.rotation, q, Time.deltaTime * modelRotationSpeed);
+            SetRotation(currentDirection);
         }
+
+        switch (npc.npcStates.currentState)
+        {
+            case NpcStates.States.MovingToNpc:
+            case NpcStates.States.AttackingNpc:
+                SetRotation(GetCenterTile(combat.GetNpcTarget()) - new Vector2(model.position.x, model.position.z));
+                break;
+        }
+    }
+
+    private void SetRotation(Vector2 direction)
+    {
+        float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        Quaternion q = Quaternion.AngleAxis(angle, Vector3.up);
+        model.transform.rotation = Quaternion.RotateTowards(model.rotation, q, Time.deltaTime * modelRotationSpeed);
+    }
+
+    private Vector2 GetCenterTile(Npc npc)
+    {
+        float x = npc.currentTile.x + ((npc.npcInfo.size.x - 1) / 2f);
+        float y = npc.currentTile.y + ((npc.npcInfo.size.y - 1) / 2f);
+
+        return new Vector2(x, y);
     }
 }

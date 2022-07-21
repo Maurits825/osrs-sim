@@ -41,7 +41,7 @@ public abstract class Npc : MonoBehaviour
 
         npcStates.currentState = npcStates.nextState;
 
-        //these can affect the nextState
+        //TODO if moving for 1 tick (1or2 tiles) we are never is moving state, does it matter...
         movement.OnGameTick();
         npcStates.currentState = npcStates.nextState; // update states from movement
         combat.OnGameTick(); //can override the state set by movement, intended...
@@ -89,6 +89,7 @@ public abstract class Npc : MonoBehaviour
 
         foreach (Vector2Int adjTile in tiles)
         {
+            //TODO maybe just do actuall distance? to get better tile
             int distance = Utils.GetChebyshevDistance(adjTile, tile);
             if (distance < minDistance)
             {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class NpcCombat : MonoBehaviour, ICombat
 {
     private Npc npc;
-    private Npc targetNpc;
+    private Npc npcTarget;
     private ICombat targetCombat;
 
     private void Start()
@@ -54,7 +54,12 @@ public class NpcCombat : MonoBehaviour, ICombat
 
     public void SetNpcTarget(Npc npc)
     {
-        targetNpc = npc;
+        npcTarget = npc;
         targetCombat = npc.GetComponent<ICombat>();
+    }
+
+    public Npc GetNpcTarget()
+    {
+        return npcTarget;
     }
 }
