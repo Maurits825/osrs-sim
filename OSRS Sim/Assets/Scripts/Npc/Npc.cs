@@ -84,13 +84,12 @@ public abstract class Npc : MonoBehaviour
     {
         List<Vector2Int> tiles = GetAllAdjacentTiles();
 
-        int minDistance = int.MaxValue;
+        float minDistance = float.MaxValue;
         Vector2Int closestTile = tiles[0];
 
         foreach (Vector2Int adjTile in tiles)
         {
-            //TODO maybe just do actuall distance? to get better tile
-            int distance = Utils.GetChebyshevDistance(adjTile, tile);
+            float distance = Vector2.Distance(adjTile, tile);
             if (distance < minDistance)
             {
                 minDistance = distance;
